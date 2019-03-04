@@ -4,8 +4,11 @@ import android.content.Intent
 import android.os.Bundle
 import android.speech.RecognitionListener
 import android.speech.SpeechRecognizer
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class SpeechRecognitionService constructor(private val recognitionIntent: Intent,
+@Singleton
+class SpeechRecognitionService @Inject constructor(private val recognitionIntent: Intent,
                                                    private val speechRecognizer: SpeechRecognizer
 ) : RecognitionListener {
 
