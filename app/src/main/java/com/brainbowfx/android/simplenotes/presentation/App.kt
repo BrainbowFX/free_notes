@@ -2,6 +2,7 @@ package com.brainbowfx.android.simplenotes.presentation
 
 import android.app.Application
 import com.brainbowfx.android.simplenotes.di.components.ApplicationComponent
+import com.brainbowfx.android.simplenotes.di.components.DaggerApplicationComponent
 import com.brainbowfx.android.simplenotes.di.modules.AppModule
 import com.brainbowfx.android.simplenotes.di.modules.DatabaseModule
 import com.brainbowfx.android.simplenotes.di.modules.SpeechRecognitionModule
