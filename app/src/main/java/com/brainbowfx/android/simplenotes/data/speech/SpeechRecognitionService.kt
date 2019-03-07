@@ -4,12 +4,14 @@ import android.content.Intent
 import android.os.Bundle
 import android.speech.RecognitionListener
 import android.speech.SpeechRecognizer
+import com.brainbowfx.android.simplenotes.di.scopes.Activity
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@Singleton
-class SpeechRecognitionService @Inject constructor(private val recognitionIntent: Intent,
-                                                   private val speechRecognizer: SpeechRecognizer
+@Activity
+class SpeechRecognitionService @Inject constructor(
+    private val recognitionIntent: Intent,
+    private val speechRecognizer: SpeechRecognizer
 ) : RecognitionListener {
 
     init {
