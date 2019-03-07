@@ -5,7 +5,7 @@ import com.brainbowfx.android.simplenotes.di.components.ApplicationComponent
 import com.brainbowfx.android.simplenotes.di.components.DaggerApplicationComponent
 import com.brainbowfx.android.simplenotes.di.modules.AppModule
 import com.brainbowfx.android.simplenotes.di.modules.DatabaseModule
-import com.brainbowfx.android.simplenotes.di.modules.SpeechRecognitionModule
+import com.brainbowfx.android.simplenotes.di.modules.FilesModule
 
 class App: Application() {
 
@@ -21,7 +21,7 @@ class App: Application() {
         appComponent = DaggerApplicationComponent.builder()
             .appModule(AppModule(this))
             .databaseModule(DatabaseModule())
-            .speechRecognitionModule(SpeechRecognitionModule())
+            .filesModule(FilesModule())
             .build()
     }
 }

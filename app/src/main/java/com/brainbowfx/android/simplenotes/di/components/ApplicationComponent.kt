@@ -1,15 +1,12 @@
 package com.brainbowfx.android.simplenotes.di.components
 
-import com.brainbowfx.android.simplenotes.di.modules.AppModule
-import com.brainbowfx.android.simplenotes.di.modules.DatabaseModule
-import com.brainbowfx.android.simplenotes.di.modules.SpeechRecognitionModule
-import com.brainbowfx.android.simplenotes.presentation.MainActivity
+import com.brainbowfx.android.simplenotes.di.modules.*
 import dagger.Component
 import javax.inject.Singleton
 
 @Singleton
-@Component(modules = [AppModule::class, DatabaseModule::class, SpeechRecognitionModule::class])
+@Component(modules = [AppModule::class, DatabaseModule::class, FilesModule::class])
 interface ApplicationComponent {
-    fun inject(mainActivity: MainActivity)
+    fun plusActivitySubcomponent(dateModule: DateModule, activityModule: ActivityModule, speechRecognitionModule: SpeechRecognitionModule): ActivitySubcomponent
 
 }
