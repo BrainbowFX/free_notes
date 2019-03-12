@@ -6,10 +6,15 @@ import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
+import javax.inject.Named
 
 @Activity
-class ImageFileGenerator @Inject constructor(private val externalFilesDir: File?,
-                                                 private val simpleDateFormat: SimpleDateFormat) {
+class ImageFileGenerator @Inject constructor() {
+    @Inject
+    lateinit var externalFilesDir: File
+
+    @field:[Inject Named("TimeStamp")]
+    lateinit var simpleDateFormat: SimpleDateFormat
 
     @Throws(IOException::class)
     fun generateImageFile(): File? {
