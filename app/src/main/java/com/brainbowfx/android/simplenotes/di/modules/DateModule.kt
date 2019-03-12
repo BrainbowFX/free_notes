@@ -5,9 +5,10 @@ import dagger.Module
 import dagger.Provides
 import java.text.SimpleDateFormat
 import java.util.*
+import javax.inject.Named
 
 @Module
-class DateModule(private val dateFormat: String) {
+class DateModule {
 
     @Provides
     @Activity
@@ -15,5 +16,11 @@ class DateModule(private val dateFormat: String) {
 
     @Activity
     @Provides
-    fun provideSimpeDateFormat(locale: Locale): SimpleDateFormat = SimpleDateFormat(dateFormat, locale)
+    @Named("TimeStamp")
+    fun provideTimeStampSimpeDateFormat(locale: Locale): SimpleDateFormat = SimpleDateFormat(TIMESTAMP, locale)
+
+    @Activity
+    @Provides
+    @Named("DateTime")
+    fun provideDateTimeSimpeDateFormat(locale: Locale): SimpleDateFormat = SimpleDateFormat(DATETIME, locale)
 }
