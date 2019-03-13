@@ -5,14 +5,19 @@ import com.brainbowfx.android.simplenotes.domain.entities.Note
 import com.brainbowfx.android.simplenotes.domain.mappers.Mapper
 import java.text.SimpleDateFormat
 
-class NotesToNotesEntityMapper(private val simpleDateFormat: SimpleDateFormat): Mapper<Note, NoteEntity> {
-    override fun map(input: Note): NoteEntity {
-        return NoteEntity(
-            if (input.id == -1) null else input.id,
+class NotesToNotesEntityMapper(private val simpleDateFormat: SimpleDateFormat) : Mapper<Note, NoteEntity> {
+    override fun map(input: Note): NoteEntity =
+        if (input.id == -1) NoteEntity(
+            title = input.title,
+            text = input.text,
+            date = simpleDateFormat.parse(input.dateTime).time,
+            imagePaths = input.imagePaths
+        ) else NoteEntity(
+            input.id,
             input.title,
             input.text,
             simpleDateFormat.parse(input.dateTime).time,
-            input.imagePaths)
-    }
+            input.imagePaths
+        )
 
 }

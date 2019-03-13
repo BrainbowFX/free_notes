@@ -5,8 +5,10 @@ import com.brainbowfx.android.simplenotes.data.mappers.Converters
 
 @Fts4
 @Entity(tableName = "notes")
-class NoteEntity(@PrimaryKey(autoGenerate = true) @ColumnInfo(name = "rowid") var id: Int?,
-                 val title: String,
-                 val text: String,
-                 val date: Long,
-                 @TypeConverters(Converters::class) val imagePaths: List<String>)
+class NoteEntity(
+    @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "rowid") var id: Int = 0,
+    val title: String,
+    val text: String,
+    val date: Long,
+    @TypeConverters(Converters::class) val imagePaths: List<String>
+)

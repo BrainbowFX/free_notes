@@ -7,7 +7,7 @@ import com.brainbowfx.android.simplenotes.data.database.dao.NotesDao
 import com.brainbowfx.android.simplenotes.data.database.models.NoteEntity
 import com.brainbowfx.android.simplenotes.data.mappers.Converters
 
-@Database(entities = [NoteEntity::class], version = 1)
+@Database(entities = [NoteEntity::class], version = 1, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class ApplicationDatabase : RoomDatabase() {
     abstract fun getNotesDao(): NotesDao

@@ -18,7 +18,7 @@ interface NotesDao {
     @Update(onConflict = OnConflictStrategy.REPLACE)
     fun update(note: NoteEntity)
 
-    @Query("SELECT * FROM notes")
+    @Query("SELECT *, `rowid` FROM notes")
     fun getAll(): List<NoteEntity>
 
 
