@@ -1,4 +1,4 @@
-package com.brainbowfx.android.simplenotes.di.modules
+package com.brainbowfx.android.simplenotes.di.modules.binders
 
 import com.brainbowfx.android.simplenotes.data.CoroutineDispatchersProviderImpl
 import com.brainbowfx.android.simplenotes.domain.CoroutineDispatchersProvider

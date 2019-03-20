@@ -1,4 +1,4 @@
-package com.brainbowfx.android.simplenotes.di.modules
+package com.brainbowfx.android.simplenotes.di.modules.binders
 
 import com.brainbowfx.android.simplenotes.data.database.NotesRepositoryImpl
 import com.brainbowfx.android.simplenotes.domain.repository.NotesRepository
@@ -7,7 +7,7 @@ import dagger.Binds
 import dagger.Module
 
 @Module
-abstract class BindersModule {
+abstract class ActivityBindersModule {
 
     @Activity
     @Binds
