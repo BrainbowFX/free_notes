@@ -4,24 +4,22 @@ import android.content.Intent
 import android.provider.MediaStore
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentManager
-import com.brainbowfx.android.simplenotes.di.scopes.Activity
+import com.brainbowfx.android.simplenotes.di.scopes.ActivityPerInstance
 import dagger.Module
 import dagger.Provides
-import java.lang.ref.SoftReference
 
 import javax.inject.Named
 
 @Module
-class ActivityModule(appCompatActivity: AppCompatActivity) {
-
-    private var activity: SoftReference<AppCompatActivity> = SoftReference(appCompatActivity)
+class ActivityModule(private var appCompatActivity: AppCompatActivity) {
 
     @Provides
-    @Activity
+    @ActivityPerInstance
     @Named("TakePhotoIntent")
     fun provideTakePhotoIntent(): Intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
 
     @Provides
-    @Activity
-    fun provideSupportFragmentManager(): FragmentManager? = activity.get()?.supportFragmentManager
+    @ActivityPerInstance
+    fun provideSupportFragmentManager(): FragmentManager? = appCompatActivity.supportFragmentManager
+
 }
