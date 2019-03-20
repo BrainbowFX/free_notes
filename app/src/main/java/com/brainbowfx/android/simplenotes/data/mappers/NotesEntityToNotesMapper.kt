@@ -10,7 +10,7 @@ class NotesEntityToNotesMapper(private var simpleDateFormat: SimpleDateFormat) :
     Mapper<NoteEntity, Note> {
     override fun map(input: NoteEntity): Note {
         return Note(
-            input.id ?: -1,
+            input.id,
             input.title,
             input.text,
             simpleDateFormat.format(Date(input.date)),

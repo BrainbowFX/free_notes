@@ -14,13 +14,18 @@ class NotesRepositoryImpl @Inject constructor(
     private var backwardMapper: Mapper<NoteEntity, Note>,
     private var dao: NotesDao) : NotesRepository {
 
+    override fun get(id: Long): Note {
+        val noteEntity = dao.get(id)
+        return backwardMapper.map(noteEntity)
+    }
+
     override fun delete(item: Note) {
         val noteEntity = forwardMapper.map(item)
         dao.delete(noteEntity)
     }
 
     override fun delete(items: List<Note>) {
-        val itemsIds = items.map { it.id }.toIntArray()
+        val itemsIds = items.map { it.id }.toLongArray()
         dao.delete(itemsIds)
     }
 
@@ -30,7 +35,5 @@ class NotesRepositoryImpl @Inject constructor(
 
     override fun getAll(): List<Note> = dao.getAll().map { backwardMapper.map(it) }
 
-    override fun add(item: Note) {
-        dao.insert(forwardMapper.map(item))
-    }
+    override fun add(item: Note): Long = dao.insert(forwardMapper.map(item))
 }

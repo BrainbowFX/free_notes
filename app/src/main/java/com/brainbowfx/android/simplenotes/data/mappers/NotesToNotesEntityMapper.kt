@@ -7,7 +7,7 @@ import java.text.SimpleDateFormat
 
 class NotesToNotesEntityMapper(private val simpleDateFormat: SimpleDateFormat) : Mapper<Note, NoteEntity> {
     override fun map(input: Note): NoteEntity =
-        if (input.id == -1) NoteEntity(
+        if (input.id == -1L) NoteEntity(
             title = input.title,
             text = input.text,
             date = simpleDateFormat.parse(input.dateTime).time,
