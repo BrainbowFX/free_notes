@@ -6,17 +6,13 @@ import android.speech.RecognitionListener
 import android.speech.SpeechRecognizer
 import com.brainbowfx.android.simplenotes.di.scopes.Activity
 import javax.inject.Inject
-import javax.inject.Singleton
+import javax.inject.Named
 
 @Activity
-class SpeechRecognitionService @Inject constructor(
-    private val recognitionIntent: Intent,
-    private val speechRecognizer: SpeechRecognizer
-) : RecognitionListener {
+class SpeechRecognitionService @Inject constructor() : RecognitionListener {
 
-    init {
-        speechRecognizer.setRecognitionListener(this)
-    }
+    @field:[Inject Named("RecognizerIntent")] lateinit var recognitionIntent: Intent
+    @Inject lateinit var speechRecognizer: SpeechRecognizer
 
     private var subscriber: SpeechRecognitionSubscriber? = null
 
@@ -65,10 +61,12 @@ class SpeechRecognitionService @Inject constructor(
     }
 
     fun subscribe(subscriber: SpeechRecognitionSubscriber) {
+        speechRecognizer.setRecognitionListener(this)
         this.subscriber = subscriber
     }
 
     fun unsubscribe() {
+        speechRecognizer.setRecognitionListener(null)
         subscriber = null
     }
 }
