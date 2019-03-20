@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">SimpleNotes</string>
+    <string name="note_text_hint">Текст заметки</string>
+    <string name="note_title_hint">Заголовок</string>
+    <string name="menu_copy">Дублировать</string>
+    <string name="menu_remove">Удалить</string>
 </resources>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="minimal_margin">8dp</dimen>
+    <dimen name="card_corner_radius">8dp</dimen>
+    <dimen name="icon_size">24dp</dimen>
+    <dimen name="standart_icon_size">32dp</dimen>
+    <dimen name="edge_margin">16dp</dimen>
+    <dimen name="edge_margin_large">32dp</dimen>
+    <dimen name="cards_primary_title_top_padding">24dp</dimen>
+    <dimen name="cards_primary_title_bottom_padding">16dp</dimen>
+    <dimen name="cards_supporting_text_top_padding">16dp</dimen>
+    <dimen name="cards_supporting_text_bottom_padding">24dp</dimen>
+    <dimen name="text_title_h6">20sp</dimen>
+    <dimen name="text_body_1">16sp</dimen>
+    <dimen name="text_caption">12sp</dimen>
+    <dimen name="input_text_min_height">128dp</dimen>
+</resources>
