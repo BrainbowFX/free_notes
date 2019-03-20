@@ -1,14 +1,22 @@
 package com.brainbowfx.android.simplenotes.di.components
 
-import com.brainbowfx.android.simplenotes.di.modules.ActivityModule
-import com.brainbowfx.android.simplenotes.di.modules.DateModule
-import com.brainbowfx.android.simplenotes.di.modules.SpeechRecognitionModule
+import com.brainbowfx.android.simplenotes.di.modules.*
+import com.brainbowfx.android.simplenotes.di.modules.binders.ActivityBindersModule
 import com.brainbowfx.android.simplenotes.di.scopes.Activity
-import com.brainbowfx.android.simplenotes.presentation.MainActivity
 import dagger.Subcomponent
 
-@Subcomponent(modules = [ActivityModule::class, DateModule::class, SpeechRecognitionModule::class])
+@Subcomponent(modules = [DateModule::class, SpeechRecognitionModule::class, ActivityBindersModule::class, MappersModule::class])
 @Activity
 interface ActivitySubcomponent {
-    fun inject(mainActivity: MainActivity)
+
+    fun activityPerInstanceSubcomponent(): ActivityPerInstanceSubcomponent.Builder
+
+    @Subcomponent.Builder
+    interface Builder {
+        fun dateModule(dateModule: DateModule): ActivitySubcomponent.Builder
+        fun speechRecognitionModule(speechRecognitionModule: SpeechRecognitionModule): ActivitySubcomponent.Builder
+        fun mappersModule(mappersModule: MappersModule): ActivitySubcomponent.Builder
+        fun build(): ActivitySubcomponent
+    }
+
 }
