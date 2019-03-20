@@ -1,14 +1,10 @@
 package com.brainbowfx.android.simplenotes.domain.interactor
 
-import com.brainbowfx.android.simplenotes.domain.CoroutineDispatchersProvider
 import com.brainbowfx.android.simplenotes.domain.entities.Note
 import javax.inject.Inject
 
-class AddNote @Inject constructor(coroutineDispatchersProvider: CoroutineDispatchersProvider) :
-    NotesUseCases<Note, Unit>(coroutineDispatchersProvider) {
+class AddNote @Inject constructor() : NotesUseCases<Note, Long>() {
 
-    override suspend fun run(params: Note) {
-        notesRepository.add(params)
-    }
+    override suspend fun execute(params: Note): Long = notesRepository.add(params)
 
 }
