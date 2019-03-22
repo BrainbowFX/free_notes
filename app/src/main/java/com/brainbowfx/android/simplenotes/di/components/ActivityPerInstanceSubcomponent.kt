@@ -3,6 +3,7 @@ package com.brainbowfx.android.simplenotes.di.components
 import com.brainbowfx.android.simplenotes.di.modules.*
 import com.brainbowfx.android.simplenotes.di.modules.binders.ActivityPerInstanceBindersModule
 import com.brainbowfx.android.simplenotes.di.scopes.ActivityPerInstance
+import com.brainbowfx.android.simplenotes.presentation.presenter.NotesListPresenter
 import dagger.Subcomponent
 
 @Subcomponent(modules = [ActivityModule::class, ActivityPerInstanceBindersModule::class])
@@ -15,4 +16,5 @@ interface ActivityPerInstanceSubcomponent {
         fun build(): ActivityPerInstanceSubcomponent
     }
 
+    fun inject(notesListPresenter: NotesListPresenter)
 }

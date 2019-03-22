@@ -3,6 +3,7 @@ package com.brainbowfx.android.simplenotes.di.components
 import com.brainbowfx.android.simplenotes.di.modules.*
 import com.brainbowfx.android.simplenotes.di.modules.binders.ActivityBindersModule
 import com.brainbowfx.android.simplenotes.di.scopes.Activity
+import com.brainbowfx.android.simplenotes.presentation.view.NotesListFragment
 import dagger.Subcomponent
 
 @Subcomponent(modules = [DateModule::class, SpeechRecognitionModule::class, ActivityBindersModule::class, MappersModule::class])
@@ -19,4 +20,5 @@ interface ActivitySubcomponent {
         fun build(): ActivitySubcomponent
     }
 
+    fun inject(notesListFragment: NotesListFragment)
 }

@@ -6,14 +6,19 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.PopupMenu
 import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.brainbowfx.android.simplenotes.R
 import com.brainbowfx.android.simplenotes.di.scopes.Activity
 import com.brainbowfx.android.simplenotes.domain.entities.Note
+import com.brainbowfx.android.simplenotes.presentation.utils.NotesDiffCalback
 import javax.inject.Inject
 
 @Activity
-class NotesListAdapter @Inject constructor(private val layoutInflater: LayoutInflater) :
+class NotesListAdapter @Inject constructor(
+    private val layoutInflater: LayoutInflater,
+    private val notesDiffCalback: NotesDiffCalback
+) :
     RecyclerView.Adapter<NotesListAdapter.ViewHolder>() {
 
     private var listener: Listener? = null
@@ -39,8 +44,9 @@ class NotesListAdapter @Inject constructor(private val layoutInflater: LayoutInf
 
 
     fun setData(notes: MutableList<Note>) {
+        notesDiffCalback.setup(this.notes, notes)
+        DiffUtil.calculateDiff(notesDiffCalback).dispatchUpdatesTo(this)
         this.notes = notes
-        notifyDataSetChanged()
     }
 
     fun removeAt(position: Int) {
@@ -65,11 +71,11 @@ class NotesListAdapter @Inject constructor(private val layoutInflater: LayoutInf
             popup.setOnMenuItemClickListener { menuItem ->
                 when (menuItem.itemId) {
                     R.id.menuCopy -> {
-                        listener?.onItemDuplicated(position)
+                        listener?.onItemDuplicated(holder.layoutPosition)
                         true
                     }
                     R.id.menuDelete -> {
-                        listener?.onItemDeleted(position)
+                        listener?.onItemDeleted(holder.layoutPosition)
                         true
                     }
                     else -> false

@@ -13,6 +13,7 @@ import com.brainbowfx.android.simplenotes.domain.entities.Note
 import com.brainbowfx.android.simplenotes.presentation.App
 import com.brainbowfx.android.simplenotes.presentation.adapters.NotesListAdapter
 import com.brainbowfx.android.simplenotes.presentation.presenter.NotesListPresenter
+import com.brainbowfx.android.simplenotes.presentation.utils.NotesItemAnimator
 import com.brainbowfx.android.simplenotes.presentation.utils.NotesSimpleCallback
 import com.brainbowfx.android.simplenotes.presentation.view.contract.NotesListView
 import javax.inject.Inject
@@ -57,6 +58,7 @@ class NotesListFragment : MvpAppCompatFragment(), NotesListView {
 
         })
 
+        rvNotesList.itemAnimator = NotesItemAnimator()
         rvNotesList.adapter = notesListAdapter
 
         val notesSimpleCallback = NotesSimpleCallback {

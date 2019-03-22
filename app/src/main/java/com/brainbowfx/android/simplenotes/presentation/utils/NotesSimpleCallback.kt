@@ -13,6 +13,6 @@ class NotesSimpleCallback(private val onItemDeleted: (Int) -> Unit) :
     ): Boolean = false
 
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-        if (direction == ItemTouchHelper.LEFT) onItemDeleted(viewHolder.adapterPosition)
+        if (direction == ItemTouchHelper.LEFT) onItemDeleted(viewHolder.layoutPosition)
     }
 }
