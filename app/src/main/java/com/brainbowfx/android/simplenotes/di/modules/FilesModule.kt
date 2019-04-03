@@ -11,5 +11,5 @@ class FilesModule {
 
     @Provides
     @Singleton
-    fun provideExternalFilesDir(): File? = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "SimpleNotes").also { it.mkdirs() }
+    fun provideExternalFilesDir(): File = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "SimpleNotes").also { it.mkdirs() }
 }

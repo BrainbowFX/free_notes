@@ -1,6 +1,8 @@
 package com.brainbowfx.android.simplenotes.di.modules
 
+import android.net.Uri
 import com.brainbowfx.android.simplenotes.data.database.models.NoteEntity
+import com.brainbowfx.android.simplenotes.data.mappers.UrlToUriMapper
 import com.brainbowfx.android.simplenotes.data.mappers.NotesEntityToNotesMapper
 import com.brainbowfx.android.simplenotes.data.mappers.NotesToNotesEntityMapper
 import com.brainbowfx.android.simplenotes.di.scopes.Activity
@@ -23,5 +25,9 @@ class MappersModule {
     @Activity
     fun provideNotesEntityToNotesMapper(@Named("DateTime") simpleDateFormat: SimpleDateFormat): Mapper<NoteEntity, Note> =
         NotesEntityToNotesMapper(simpleDateFormat)
+
+    @Provides
+    @Activity
+    fun provideUrlToUriMapper(): Mapper<String, Uri> = UrlToUriMapper()
 
 }
