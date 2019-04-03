@@ -2,6 +2,37 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:app="http://schemas.android.com/apk/res-auto"
             xmlns:tools="http://schemas.android.com/tools"
-            android:id="@+id/navigation_graph">
+            android:id="@+id/navigation_graph"
+            app:startDestination="@id/notesListFragment">
+
+    <fragment
+            android:id="@+id/notesListFragment"
+            android:name="com.brainbowfx.android.simplenotes.presentation.view.NotesListFragment"
+            tools:layout="@layout/fragment_notes_list"
+            android:label="NotesListFragment">
+        <action
+                android:id="@+id/action_notesListFragment_to_notesEditFragment"
+                app:destination="@id/notesEditFragment"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right"/>
+    </fragment>
+
+    <fragment
+            android:id="@+id/notesEditFragment"
+            android:name="com.brainbowfx.android.simplenotes.presentation.view.NotesEditFragment"
+            android:label="fragment_note_edit"
+            tools:layout="@layout/fragment_note_edit">
+        <argument
+                android:name="id"
+                app:argType="long"
+                android:defaultValue="-1L"/>
+        <argument
+                android:name="duplicate"
+                app:argType="boolean"
+                android:defaultValue="false"/>
+
+    </fragment>
 
 </navigation>

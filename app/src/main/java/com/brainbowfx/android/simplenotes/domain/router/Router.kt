@@ -6,5 +6,11 @@ interface Router {
     fun navigateToNotesEdit(id: Long, duplicate: Boolean)
 
     fun navigateToNotesEdit()
+
+    fun returnBack(): Boolean
+
+    fun addCallback(onDestinationChanged: (destinationId: Int) -> Unit)
+
+    fun removeCallback()
 }
 
