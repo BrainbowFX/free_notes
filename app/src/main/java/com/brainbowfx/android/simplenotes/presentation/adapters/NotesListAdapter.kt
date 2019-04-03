@@ -12,6 +12,7 @@ import com.brainbowfx.android.simplenotes.R
 import com.brainbowfx.android.simplenotes.di.scopes.Activity
 import com.brainbowfx.android.simplenotes.domain.entities.Note
 import com.brainbowfx.android.simplenotes.presentation.utils.NotesDiffCalback
+import com.bumptech.glide.Glide
 import javax.inject.Inject
 
 @Activity
@@ -64,6 +65,12 @@ class NotesListAdapter @Inject constructor(
         holder.tvNotesHeader.text = note.title
         holder.tvNotesText.text = note.text
         holder.tvNotesDate.text = note.dateTime
+
+        if (note.imagePaths.isNotEmpty()) {
+            holder.ivNotesTitleImage.visibility = View.VISIBLE
+            Glide.with(holder.root.context).load(note.imagePaths[0]).into(holder.ivNotesTitleImage)
+        } else holder.ivNotesTitleImage.visibility = View.GONE
+
         holder.root.setOnClickListener { listener?.onItemClicked(position) }
         holder.ivMenu.setOnClickListener {
             val popup = PopupMenu(holder.root.context, it)

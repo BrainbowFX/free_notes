@@ -29,6 +29,8 @@ class NotesListFragment : MvpAppCompatFragment(), NotesListView {
     lateinit var rvNotesList: RecyclerView
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        App.Instance.activitySubcomponent?.inject(this)
+        App.Instance.activityPerInstanceSubcomponent?.inject(presenter)
         return inflater.inflate(R.layout.fragment_notes_list, container, false)
     }
 
@@ -38,8 +40,6 @@ class NotesListFragment : MvpAppCompatFragment(), NotesListView {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        App.Instance.activitySubcomponent?.inject(this)
-        App.Instance.activityPerInstanceSubcomponent?.inject(presenter)
 
         rvNotesList = view.findViewById(R.id.rvNotesList)
 

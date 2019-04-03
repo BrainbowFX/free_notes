@@ -11,14 +11,13 @@
         android:layout_height="wrap_content">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-            android:paddingTop="@dimen/cards_primary_title_top_padding"
-            android:paddingBottom="@dimen/cards_supporting_text_bottom_padding"
-            android:paddingEnd="@dimen/edge_margin"
-            android:paddingStart="@dimen/edge_margin"
             android:layout_height="wrap_content"
             android:layout_width="match_parent">
 
-        <ImageView
+        <com.brainbowfx.android.simplenotes.presentation.customview.AspectRatioImageView
+                android:scaleType="centerCrop"
+                android:adjustViewBounds="true"
+                app:aspectRatio="0.5625"
                 android:visibility="gone"
                 android:id="@+id/ivNotesTitleImage"
                 android:layout_width="match_parent"
@@ -28,16 +27,18 @@
                 app:layout_constraintStart_toStartOf="parent"/>
 
         <TextView
+                android:layout_marginTop="@dimen/cards_primary_title_top_padding"
                 android:id="@+id/tvNotesHeader"
                 tools:text="Header"
                 android:textSize="@dimen/text_title_h6"
                 android:textStyle="bold"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
+                android:layout_marginEnd="@dimen/minimal_margin"
                 app:layout_constraintTop_toBottomOf="@+id/ivNotesTitleImage"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/ibMenu"/>
+                app:layout_constraintEnd_toStartOf="@+id/ibMenu"
+                android:layout_marginStart="@dimen/edge_margin"/>
 
         <TextView
                 android:id="@+id/tvNotesText"
@@ -48,9 +49,11 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tvNotesHeader"
-                app:layout_constraintBottom_toTopOf="@+id/tvNotesDate"/>
+                app:layout_constraintBottom_toTopOf="@+id/tvNotesDate"
+                android:layout_marginStart="@dimen/edge_margin"
+                android:layout_marginEnd="8dp"
+                app:layout_constraintEnd_toStartOf="@+id/ibMenu"/>
 
         <TextView
                 android:id="@+id/tvNotesDate"
@@ -59,15 +62,19 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"/>
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginBottom="@dimen/cards_primary_title_bottom_padding"
+                android:layout_marginEnd="@dimen/edge_margin"/>
 
         <ImageButton
+                android:layout_marginTop="@dimen/cards_primary_title_top_padding"
                 android:id="@+id/ibMenu"
                 style="@style/Widget.AppCompat.Light.ActionButton.Overflow"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
+                app:layout_constraintTop_toBottomOf="@+id/ivNotesTitleImage"
+                android:layout_marginEnd="8dp"/>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

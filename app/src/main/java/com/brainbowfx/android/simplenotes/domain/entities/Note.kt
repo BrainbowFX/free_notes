@@ -4,7 +4,7 @@ class Note(var id: Long = -1,
            var title: String = "",
            var text: String = "",
            var dateTime: String = "",
-           val imagePaths: MutableList<String> = mutableListOf()) {
+           var imagePaths: MutableList<String> = mutableListOf()) {
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

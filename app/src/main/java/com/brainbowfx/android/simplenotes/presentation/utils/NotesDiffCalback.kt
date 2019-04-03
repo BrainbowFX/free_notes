@@ -24,5 +24,5 @@ class NotesDiffCalback @Inject constructor() : DiffUtil.Callback() {
     override fun getNewListSize(): Int = newData.size
 
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean =
-        oldData[oldItemPosition].equals(newData[newItemPosition].id)
+        oldData[oldItemPosition] == newData[newItemPosition]
 }
