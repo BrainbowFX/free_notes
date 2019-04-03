@@ -5,8 +5,6 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingStart="@dimen/edge_margin_large"
-        android:paddingEnd="@dimen/edge_margin_large"
         android:paddingTop="@dimen/cards_primary_title_top_padding"
         android:paddingBottom="@dimen/cards_supporting_text_bottom_padding"
         tools:context=".presentation.view.NotesEditFragment">
@@ -21,7 +19,9 @@
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginEnd="@dimen/edge_margin_large"
+            android:layout_marginStart="@dimen/edge_margin_large">
 
         <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/tietTitle"
@@ -41,7 +41,9 @@
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textInputLayout">
+            app:layout_constraintTop_toBottomOf="@+id/textInputLayout"
+            android:layout_marginStart="@dimen/edge_margin_large"
+            android:layout_marginEnd="@dimen/edge_margin_large">
 
         <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/tietInputText"
@@ -61,7 +63,8 @@
             android:layout_height="@dimen/standart_icon_size"
             android:layout_marginTop="@dimen/minimal_margin"
             app:layout_constraintTop_toBottomOf="@+id/textInputLayout2"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="@dimen/edge_margin_large"/>
 
     <ImageButton
             android:id="@+id/ibRecordVoice"
@@ -73,5 +76,27 @@
             android:layout_marginTop="@dimen/minimal_margin"
             app:layout_constraintTop_toBottomOf="@+id/textInputLayout2"
             app:layout_constraintEnd_toStartOf="@+id/ibAddPhoto"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvImagesList"
+            android:layout_marginTop="@dimen/cards_supporting_text_bottom_padding"
+            android:orientation="vertical"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/notes_image_list_size"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ibRecordVoice"/>
+
+    <ImageButton
+            android:visibility="gone"
+            android:id="@+id/ibDeleteImages"
+            style="@style/Base.Widget.AppCompat.ActionButton"
+            app:srcCompat="@drawable/ic_delete"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintEnd_toEndOf="@+id/rvImagesList"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="@+id/rvImagesList"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
