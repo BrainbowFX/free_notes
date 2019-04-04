@@ -11,6 +11,7 @@ import com.brainbowfx.android.simplenotes.presentation.view.contract.ImagesView
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.IOException
 import javax.inject.Inject
 
 @InjectViewState
@@ -32,14 +33,18 @@ class ImagesPresenter : MvpPresenter<ImagesView>() {
         permissionManager.checkPermission(PERMISSION_WRITE_EXTERNAL_STORAGE,
             {
                 GlobalScope.launch(coroutineDispatchersProvider.getMainDispatcher()) {
-                    val url = withContext(coroutineDispatchersProvider.getIODispatcher()) { createImageFile.execute(Unit)}
+                    val url = try {
+                        withContext(coroutineDispatchersProvider.getIODispatcher()) { createImageFile.execute(Unit) }
+                    } catch (ioException: IOException) {
+                        ""
+                    }
                     val success = if (url.isNotEmpty()) takePhoto.execute(url) else false
                     if (success) viewState.setImage(url)
+                    else viewState.showFileCreationFailureError()
                 }
             },
-            {
-
-            })
+            { Unit }
+        )
 
     }
 

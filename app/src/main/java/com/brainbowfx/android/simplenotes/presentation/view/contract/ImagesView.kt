@@ -8,4 +8,7 @@ interface ImagesView : MvpView {
 
     @StateStrategyType(SkipStrategy::class)
     fun setImage(image: String)
+
+    @StateStrategyType(SkipStrategy::class)
+    fun showFileCreationFailureError()
 }

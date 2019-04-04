@@ -36,7 +36,6 @@ class NotesListPresenter @Inject constructor() : MvpPresenter<NotesListView>() {
         }
     }
 
-
     override fun onDestroy() {
         job?.cancel()
         super.onDestroy()
@@ -48,14 +47,7 @@ class NotesListPresenter @Inject constructor() : MvpPresenter<NotesListView>() {
 
     fun onNoteDeleted(note: Note, position: Int) {
         job = GlobalScope.launch(dispatchersProvider.getMainDispatcher()) {
-            try {
-                withContext(dispatchersProvider.getIODispatcher()) {
-                    deleteNote.execute(note)
-                }
-            } catch (ioException: IOException) {
-                ioException.printStackTrace()
-                return@launch
-            }
+            withContext(dispatchersProvider.getIODispatcher()) { deleteNote.execute(note) }
             viewState.removeNoteAt(position)
         }
     }

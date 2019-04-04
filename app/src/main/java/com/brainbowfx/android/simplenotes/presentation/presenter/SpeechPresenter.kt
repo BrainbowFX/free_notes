@@ -38,7 +38,7 @@ class SpeechPresenter : MvpPresenter<SpeechView>(), SpeechRecognitionService.Spe
     }
 
     fun onRecordVoiceButtonUp() {
-        /*speechRecognitionService.stop()*/
+        speechRecognitionService.stop()
     }
 
     //SpeechRecognitionSubscriber implementation
