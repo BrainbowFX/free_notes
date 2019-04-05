@@ -71,6 +71,7 @@ class NotesEditFragment : MvpAppCompatFragment(), SpeechView, NotesEditView, Ima
         rvImagesList = view.findViewById(R.id.rvImagesList)
 
         rvImagesList.adapter = imagesListAdapter
+        rvImagesList.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
 
         tracker = SelectionTracker.Builder<Long>(
             "notesSelection",
@@ -83,12 +84,11 @@ class NotesEditFragment : MvpAppCompatFragment(), SpeechView, NotesEditView, Ima
             override fun onSelectionChanged() = notePresenter.onImagesSelectionChanged(tracker.selection.size())
         })
         imagesListAdapter.setTracker(tracker)
+
         imagesListAdapter.setListener {
             val imagePath = imagesListAdapter.getItem(it)
             notePresenter.onImageSelected(imagePath)
         }
-
-        rvImagesList.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
 
         ibDeleteImage = view.findViewById(R.id.ibDeleteImages)
         ibDeleteImage.setOnClickListener {
@@ -122,6 +122,11 @@ class NotesEditFragment : MvpAppCompatFragment(), SpeechView, NotesEditView, Ima
         val images = imagesListAdapter.getItems()
 
         notePresenter.onStop(title, inputText, images)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        imagesListAdapter.removeListener()
     }
 
     //NotesEditView implementation
