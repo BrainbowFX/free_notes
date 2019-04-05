@@ -1,5 +1,8 @@
 <resources>
-    <string name="app_name">Free Notes</string>
+    <string name="app_name" translatable="false">Free Notes</string>
+    <string name="database_name" translatable="false">free_note</string>
+    <string name="file_provider_authority" translatable="false">com.brainbowfx.android.freenotes.fileprovider</string>
+    <string name="image_temp_files_directory_name" translatable="false">FreeNotes</string>
     <string name="note_text_hint">Текст заметки</string>
     <string name="note_title_hint">Заголовок</string>
     <string name="menu_copy">Дублировать</string>
