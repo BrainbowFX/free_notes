@@ -71,7 +71,7 @@ class NotesListAdapter @Inject constructor(
             Glide.with(holder.root.context).load(note.imagePaths[0]).into(holder.ivNotesTitleImage)
         } else holder.ivNotesTitleImage.visibility = View.GONE
 
-        holder.root.setOnClickListener { listener?.onItemClicked(position) }
+        holder.root.setOnClickListener { listener?.onItemClicked(holder.layoutPosition) }
         holder.ivMenu.setOnClickListener {
             val popup = PopupMenu(holder.root.context, it)
             popup.inflate(R.menu.notes_item_menu)
