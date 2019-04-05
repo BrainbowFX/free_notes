@@ -8,7 +8,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
-    <com.brainbowfx.android.simplenotes.presentation.customview.AspectRatioImageView
+    <com.brainbowfx.android.freenotes.presentation.customview.AspectRatioImageView
             android:id="@+id/arivNoteImage"
             android:adjustViewBounds="true"
             android:scaleType="centerCrop"

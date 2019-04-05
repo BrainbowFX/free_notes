@@ -14,7 +14,7 @@
             android:layout_height="wrap_content"
             android:layout_width="match_parent">
 
-        <com.brainbowfx.android.simplenotes.presentation.customview.AspectRatioImageView
+        <com.brainbowfx.android.freenotes.presentation.customview.AspectRatioImageView
                 android:scaleType="centerCrop"
                 android:adjustViewBounds="true"
                 app:aspectRatio="0.5625"

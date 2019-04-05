@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.brainbowfx.android.simplenotes">
+          package="com.brainbowfx.android.freenotes">
 
     <uses-feature android:name="android.hardware.camera" android:required="false" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
-            android:name=".presentation.App"
+            android:name="com.brainbowfx.android.freenotes.presentation.App"
             android:allowBackup="true"
             android:icon="@mipmap/ic_launcher"
             android:label="@string/app_name"
@@ -17,7 +17,7 @@
 
         <provider
                 android:name="androidx.core.content.FileProvider"
-                android:authorities="com.brainbowfx.android.simplenotes.fileprovider"
+                android:authorities="com.brainbowfx.android.freenotes.fileprovider"
                 android:exported="false"
                 android:grantUriPermissions="true">
             <meta-data
@@ -26,7 +26,7 @@
             </meta-data>
         </provider>
 
-        <activity android:name=".presentation.view.MainActivity" android:windowSoftInputMode="adjustPan">
+        <activity android:name="com.brainbowfx.android.freenotes.presentation.view.MainActivity" android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 

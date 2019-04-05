@@ -7,7 +7,7 @@
 
     <fragment
             android:id="@+id/notesListFragment"
-            android:name="com.brainbowfx.android.simplenotes.presentation.view.NotesListFragment"
+            android:name="com.brainbowfx.android.freenotes.presentation.view.NotesListFragment"
             tools:layout="@layout/fragment_notes_list"
             android:label="NotesListFragment">
         <action
@@ -21,7 +21,7 @@
 
     <fragment
             android:id="@+id/notesEditFragment"
-            android:name="com.brainbowfx.android.simplenotes.presentation.view.NotesEditFragment"
+            android:name="com.brainbowfx.android.freenotes.presentation.view.NotesEditFragment"
             android:label="fragment_note_edit"
             tools:layout="@layout/fragment_note_edit">
         <argument
