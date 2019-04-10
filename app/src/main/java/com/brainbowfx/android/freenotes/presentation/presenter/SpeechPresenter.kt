@@ -11,8 +11,6 @@ import javax.inject.Inject
 @InjectViewState
 class SpeechPresenter : MvpPresenter<SpeechView>(), SpeechRecognitionService.SpeechRecognitionSubscriber {
 
-    private lateinit var speechView: SpeechView
-
     @Inject
     lateinit var permissionManager: PermissionManager
 
@@ -22,7 +20,6 @@ class SpeechPresenter : MvpPresenter<SpeechView>(), SpeechRecognitionService.Spe
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
         speechRecognitionService.subscribe(this)
-        speechView = viewState
     }
 
     override fun onDestroy() {
@@ -43,11 +40,11 @@ class SpeechPresenter : MvpPresenter<SpeechView>(), SpeechRecognitionService.Spe
 
     //SpeechRecognitionSubscriber implementation
     override fun onSpeechError(throwable: Throwable) {
-        speechView.showError(throwable.message.toString())
+        viewState.showError(throwable.message.toString())
     }
 
     override fun onSpeechResult(recognizedSpeech: String) {
-        speechView.placeTextAtCursorPositon(recognizedSpeech)
+        viewState.placeTextAtCursorPositon(recognizedSpeech)
     }
 
 }

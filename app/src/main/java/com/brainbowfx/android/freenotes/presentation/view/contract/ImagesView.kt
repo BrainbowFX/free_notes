@@ -11,4 +11,7 @@ interface ImagesView : MvpView {
 
     @StateStrategyType(SkipStrategy::class)
     fun showFileCreationFailureError()
+
+    @StateStrategyType(SkipStrategy::class)
+    fun showWriteExternaStoragePermissionDenied()
 }

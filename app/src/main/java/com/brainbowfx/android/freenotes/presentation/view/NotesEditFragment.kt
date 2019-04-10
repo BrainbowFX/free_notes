@@ -178,6 +178,10 @@ class NotesEditFragment : MvpAppCompatFragment(), SpeechView, NotesEditView, Ima
         Toast.makeText(context, getString(R.string.file_creation_failure), Toast.LENGTH_LONG).show()
     }
 
+    override fun showWriteExternaStoragePermissionDenied() {
+        Toast.makeText(context, getString(R.string.write_external_storage_permission_denied), Toast.LENGTH_LONG).show()
+    }
+
     @ProvidePresenter
     fun provideNotePresenter(): NotePresenter =
         NotePresenter(arguments?.getLong("id"), arguments?.getBoolean("duplicate"))

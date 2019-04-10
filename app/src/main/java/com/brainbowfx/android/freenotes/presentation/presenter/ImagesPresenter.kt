@@ -33,19 +33,22 @@ class ImagesPresenter : MvpPresenter<ImagesView>() {
         permissionManager.checkPermission(PERMISSION_WRITE_EXTERNAL_STORAGE,
             {
                 GlobalScope.launch(coroutineDispatchersProvider.getMainDispatcher()) {
-                    val url = try {
-                        withContext(coroutineDispatchersProvider.getIODispatcher()) { createImageFile.execute(Unit) }
-                    } catch (ioException: IOException) {
-                        ""
-                    }
-                    val success = if (url.isNotEmpty()) takePhoto.execute(url) else false
-                    if (success) viewState.setImage(url)
+                    val url: String = createImageFile()
+                    val isPhotoTaked: Boolean = takePhoto(url)
+                    if (isPhotoTaked) viewState.setImage(url)
                     else viewState.showFileCreationFailureError()
                 }
             },
-            { Unit }
+            { viewState.showWriteExternaStoragePermissionDenied() }
         )
+    }
 
+    suspend fun takePhoto(url: String): Boolean = if (url.isNotEmpty()) takePhoto.execute(url) else false
+
+    suspend fun createImageFile(): String = try {
+        withContext(coroutineDispatchersProvider.getIODispatcher()) { createImageFile.execute(Unit) }
+    } catch (ioException: IOException) {
+        ""
     }
 
 
