@@ -62,9 +62,13 @@ class NotesListAdapter @Inject constructor(
 
     override fun onBindViewHolder(holder: NotesListAdapter.ViewHolder, position: Int) {
         val note = notes[position]
-        holder.tvNotesHeader.text = note.title
         holder.tvNotesText.text = note.text
         holder.tvNotesDate.text = note.dateTime
+
+        if (note.title.isNotEmpty()) {
+            holder.tvNotesHeader.visibility = View.VISIBLE
+            holder.tvNotesHeader.text = note.title
+        } else holder.tvNotesHeader.visibility = View.GONE
 
         if (note.imagePaths.isNotEmpty()) {
             holder.ivNotesTitleImage.visibility = View.VISIBLE
