@@ -30,7 +30,10 @@ class SpeechPresenter : MvpPresenter<SpeechView>(), SpeechRecognitionService.Spe
     fun onRecordVoiceButtonDown() {
         permissionManager.checkPermission(
             PERMISSION_RECORD_AUDIO,
-            onPermissionGranted = { speechRecognitionService.start() },
+            onPermissionGranted = {
+                speechRecognitionService.start()
+                viewState.showSpeechMessage()
+            },
             onPermissionDenied = { Unit })
     }
 

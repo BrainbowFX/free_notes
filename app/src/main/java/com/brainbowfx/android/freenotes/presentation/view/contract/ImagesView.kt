@@ -10,7 +10,7 @@ interface ImagesView : MvpView {
     fun setImage(image: String)
 
     @StateStrategyType(SkipStrategy::class)
-    fun showFileCreationFailureError()
+    fun showTakePhotoFailureError()
 
     @StateStrategyType(SkipStrategy::class)
     fun showWriteExternaStoragePermissionDenied()

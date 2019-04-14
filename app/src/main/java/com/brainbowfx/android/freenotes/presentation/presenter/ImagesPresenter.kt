@@ -36,7 +36,7 @@ class ImagesPresenter : MvpPresenter<ImagesView>() {
                     val url: String = createImageFile()
                     val isPhotoTaked: Boolean = takePhoto(url)
                     if (isPhotoTaked) viewState.setImage(url)
-                    else viewState.showFileCreationFailureError()
+                    else viewState.showTakePhotoFailureError()
                 }
             },
             { viewState.showWriteExternaStoragePermissionDenied() }

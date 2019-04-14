@@ -6,6 +6,8 @@ interface SpeechView : MvpView {
 
     fun showError(error: String)
 
+    fun showSpeechMessage()
+
     fun placeTextAtCursorPositon(text: String)
 
 }

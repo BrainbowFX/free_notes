@@ -169,13 +169,17 @@ class NotesEditFragment : MvpAppCompatFragment(), SpeechView, NotesEditView, Ima
         tietInputText.text?.insert(tietInputText.selectionStart, text)
     }
 
+    override fun showSpeechMessage() {
+        Toast.makeText(context, getString(R.string.text_to_speech_notification), Toast.LENGTH_LONG).show()
+    }
+
     //ImagesView implentation methods
     override fun setImage(image: String) {
         imagesListAdapter.addItem(image)
     }
 
-    override fun showFileCreationFailureError() {
-        Toast.makeText(context, getString(R.string.file_creation_failure), Toast.LENGTH_LONG).show()
+    override fun showTakePhotoFailureError() {
+        Toast.makeText(context, getString(R.string.take_photo_failure), Toast.LENGTH_LONG).show()
     }
 
     override fun showWriteExternaStoragePermissionDenied() {

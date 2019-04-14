@@ -7,6 +7,7 @@
     <string name="note_title_hint">Заголовок</string>
     <string name="menu_copy">Дублировать</string>
     <string name="menu_remove">Удалить</string>
-    <string name="file_creation_failure">Не удалось создать временный файл для сохранения фото</string>
+    <string name="text_to_speech_notification">Произнесите текст удерживая кнопку микрофона</string>
+    <string name="take_photo_failure">Не удалось создать фото</string>
     <string name="write_external_storage_permission_denied">Невозможно создать временный файл для съемки фото без разрешения на запись файлов</string>
 </resources>
