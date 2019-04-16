@@ -2,6 +2,7 @@ package com.brainbowfx.android.freenotes.presentation.presenter
 
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
+import com.brainbowfx.android.freenotes.DATETIME_NAMED_ID
 import com.brainbowfx.android.freenotes.domain.CoroutineDispatchersProvider
 import com.brainbowfx.android.freenotes.domain.abstraction.ImageViewer
 import com.brainbowfx.android.freenotes.domain.entities.Note
@@ -36,7 +37,7 @@ class NotePresenter(private val argId: Long?, private val argDuplicate: Boolean?
     @Inject
     lateinit var updateNote: UpdateNote
 
-    @field:[Inject Named("DateTime")]
+    @field:[Inject Named(DATETIME_NAMED_ID)]
     lateinit var simpleDateFormat: SimpleDateFormat
 
     private lateinit var note: Note

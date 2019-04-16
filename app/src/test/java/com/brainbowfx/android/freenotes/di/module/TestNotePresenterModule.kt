@@ -1,6 +1,7 @@
 package com.brainbowfx.android.freenotes.di.module
 
-import com.brainbowfx.android.freenotes.di.modules.DATETIME
+import com.brainbowfx.android.freenotes.DATETIME
+import com.brainbowfx.android.freenotes.DATETIME_NAMED_ID
 import com.brainbowfx.android.freenotes.domain.abstraction.ImageViewer
 import com.brainbowfx.android.freenotes.domain.interactor.AddNote
 import com.brainbowfx.android.freenotes.domain.interactor.GetNote
@@ -28,6 +29,6 @@ class TestNotePresenterModule {
     fun provideUpdateNoteMock(): UpdateNote = Mockito.mock(UpdateNote::class.java)
 
     @Provides
-    @Named("DateTime")
+    @Named(DATETIME_NAMED_ID)
     fun provideSimpleDateFormat(): SimpleDateFormat = SimpleDateFormat(DATETIME, Locale.getDefault())
 }

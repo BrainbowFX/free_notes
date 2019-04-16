@@ -1,7 +1,6 @@
 package com.brainbowfx.android.freenotes
 
 import com.brainbowfx.android.freenotes.data.mappers.NotesToNotesEntityMapper
-import com.brainbowfx.android.freenotes.di.modules.TIMESTAMP
 import com.brainbowfx.android.freenotes.domain.entities.Note
 import org.junit.Before
 import org.junit.Test
