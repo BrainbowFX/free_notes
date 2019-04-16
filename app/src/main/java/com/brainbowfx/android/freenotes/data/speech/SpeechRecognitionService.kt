@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.speech.RecognitionListener
 import android.speech.SpeechRecognizer
+import com.brainbowfx.android.freenotes.RECOGNIZER_INTENT_ID
 import com.brainbowfx.android.freenotes.di.scopes.Activity
 import javax.inject.Inject
 import javax.inject.Named
@@ -11,8 +12,11 @@ import javax.inject.Named
 @Activity
 class SpeechRecognitionService @Inject constructor() : RecognitionListener {
 
-    @field:[Inject Named("RecognizerIntent")] lateinit var recognitionIntent: Intent
-    @Inject lateinit var speechRecognizer: SpeechRecognizer
+    @field:[Inject Named(RECOGNIZER_INTENT_ID)]
+    lateinit var recognitionIntent: Intent
+
+    @Inject
+    lateinit var speechRecognizer: SpeechRecognizer
 
     private var subscriber: SpeechRecognitionSubscriber? = null
 

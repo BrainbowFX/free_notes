@@ -1,5 +1,6 @@
 package com.brainbowfx.android.freenotes.data.images
 
+import com.brainbowfx.android.freenotes.TIMESTAMP_NAMED_ID
 import com.brainbowfx.android.freenotes.di.scopes.Activity
 import com.brainbowfx.android.freenotes.domain.abstraction.ImageFileGenerator
 import java.io.File
@@ -16,7 +17,7 @@ class ImageFileGeneratorImpl @Inject constructor() :
     @Inject
     lateinit var externalFilesDir: File
 
-    @field:[Inject Named("TimeStamp")]
+    @field:[Inject Named(TIMESTAMP_NAMED_ID)]
     lateinit var simpleDateFormat: SimpleDateFormat
 
     @Throws(IOException::class)

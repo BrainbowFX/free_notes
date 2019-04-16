@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.speech.RecognizerIntent
 import android.speech.SpeechRecognizer
+import com.brainbowfx.android.freenotes.RECOGNIZER_INTENT_ID
 import com.brainbowfx.android.freenotes.di.scopes.Activity
 import dagger.Module
 import dagger.Provides
@@ -19,7 +20,7 @@ class SpeechRecognitionModule {
 
     @Provides
     @Activity
-    @Named("RecognizerIntent")
+    @Named(RECOGNIZER_INTENT_ID)
     fun provideRecognizerIntent(): Intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
 
 }

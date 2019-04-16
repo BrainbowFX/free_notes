@@ -1,6 +1,7 @@
 package com.brainbowfx.android.freenotes.di.modules
 
 import android.net.Uri
+import com.brainbowfx.android.freenotes.DATETIME_NAMED_ID
 import com.brainbowfx.android.freenotes.data.database.models.NoteEntity
 import com.brainbowfx.android.freenotes.data.mappers.UrlToUriMapper
 import com.brainbowfx.android.freenotes.data.mappers.NotesEntityToNotesMapper
@@ -18,12 +19,12 @@ class MappersModule {
 
     @Provides
     @Activity
-    fun provideNotesToNotesEntityMapper(@Named("DateTime") simpleDateFormat: SimpleDateFormat): Mapper<Note, NoteEntity> =
+    fun provideNotesToNotesEntityMapper(@Named(DATETIME_NAMED_ID) simpleDateFormat: SimpleDateFormat): Mapper<Note, NoteEntity> =
         NotesToNotesEntityMapper(simpleDateFormat)
 
     @Provides
     @Activity
-    fun provideNotesEntityToNotesMapper(@Named("DateTime") simpleDateFormat: SimpleDateFormat): Mapper<NoteEntity, Note> =
+    fun provideNotesEntityToNotesMapper(@Named(DATETIME_NAMED_ID) simpleDateFormat: SimpleDateFormat): Mapper<NoteEntity, Note> =
         NotesEntityToNotesMapper(simpleDateFormat)
 
     @Provides
