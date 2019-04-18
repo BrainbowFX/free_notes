@@ -6,8 +6,8 @@ import java.io.IOException
 import javax.inject.Inject
 
 class CreateImageFile @Inject constructor(
-    val imageFileGenerator: ImageFileGenerator,
-    val fileUriProvider: FileUriProvider
+    private val imageFileGenerator: ImageFileGenerator,
+    private val fileUriProvider: FileUriProvider
 ) : UseCase<Unit, String>() {
 
     @Throws(IOException::class)

@@ -11,14 +11,12 @@ import javax.inject.Inject
 import javax.inject.Named
 
 @Activity
-class ImageFileGeneratorImpl @Inject constructor() :
+class ImageFileGeneratorImpl @Inject constructor(
+    private val externalFilesDir: File,
+    @Named(TIMESTAMP_NAMED_ID) private val simpleDateFormat: SimpleDateFormat
+
+) :
     ImageFileGenerator {
-
-    @Inject
-    lateinit var externalFilesDir: File
-
-    @field:[Inject Named(TIMESTAMP_NAMED_ID)]
-    lateinit var simpleDateFormat: SimpleDateFormat
 
     @Throws(IOException::class)
     override fun generateImageFile(): File? {

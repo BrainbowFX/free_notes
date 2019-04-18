@@ -35,7 +35,7 @@ class CreateImageFileTest {
 
     @Test
     fun `test execute method when imageFileGenerator's generateImageFile method returns null should return empty string`(){
-        Mockito.`when`(createImageFile.imageFileGenerator.generateImageFile()).thenReturn(null)
+        Mockito.`when`(imageFileGenerator.generateImageFile()).thenReturn(null)
 
         runBlocking {
             val uri = createImageFile.execute(Unit)
@@ -47,8 +47,8 @@ class CreateImageFileTest {
     fun `test execute method when imageFileGenerator's generateImageFile method returns file should return url string`(){
         val filename = "tempfile"
         val testfile = tempFolder.newFile(filename)
-        Mockito.`when`(createImageFile.imageFileGenerator.generateImageFile()).thenReturn(testfile)
-        Mockito.`when`(createImageFile.fileUriProvider.getUriForFile(testfile)).thenReturn(filename)
+        Mockito.`when`(imageFileGenerator.generateImageFile()).thenReturn(testfile)
+        Mockito.`when`(fileUriProvider.getUriForFile(testfile)).thenReturn(filename)
         runBlocking {
             val uri = createImageFile.execute(Unit)
             assertEquals(filename, uri)
@@ -57,7 +57,7 @@ class CreateImageFileTest {
 
     @Test
     fun `execute method when imageFileGenerator's generateImageFile method throws IOException should throw IOException`(){
-        Mockito.doAnswer{ throw IOException() }.`when`(createImageFile.imageFileGenerator).generateImageFile()
+        Mockito.doAnswer{ throw IOException() }.`when`(imageFileGenerator).generateImageFile()
         runBlocking {
             try {
                 createImageFile.execute(Unit)

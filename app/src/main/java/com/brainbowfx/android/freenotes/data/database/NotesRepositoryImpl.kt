@@ -10,9 +10,9 @@ import javax.inject.Inject
 
 @Activity
 class NotesRepositoryImpl @Inject constructor(
-    private var forwardMapper: Mapper<Note, NoteEntity>,
-    private var backwardMapper: Mapper<NoteEntity, Note>,
-    private var dao: NotesDao) : NotesRepository {
+    private val forwardMapper: Mapper<Note, NoteEntity>,
+    private val backwardMapper: Mapper<NoteEntity, Note>,
+    private val dao: NotesDao) : NotesRepository {
 
     override fun get(id: Long): Note {
         val noteEntity = dao.get(id)

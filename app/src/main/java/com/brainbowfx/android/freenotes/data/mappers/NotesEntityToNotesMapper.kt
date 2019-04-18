@@ -6,7 +6,7 @@ import com.brainbowfx.android.freenotes.domain.mappers.Mapper
 import java.text.SimpleDateFormat
 import java.util.*
 
-class NotesEntityToNotesMapper(private var simpleDateFormat: SimpleDateFormat) :
+class NotesEntityToNotesMapper(private val simpleDateFormat: SimpleDateFormat) :
     Mapper<NoteEntity, Note> {
     override fun map(input: NoteEntity): Note {
         return Note(

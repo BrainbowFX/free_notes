@@ -14,8 +14,8 @@ android {
         applicationId "com.brainbowfx.android.freenotes"
         minSdkVersion 19
         targetSdkVersion 28
-        versionCode 10011
-        versionName "1.0.11"
+        versionCode 10012
+        versionName "1.0.12"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }
@@ -53,6 +53,7 @@ dependencies {
     implementation "com.github.bumptech.glide:glide:$glide_version"
     kapt "com.github.bumptech.glide:compiler:$glide_version"
     testImplementation 'org.mockito:mockito-core:2.26.0'
+    testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:2.1.0"
     testImplementation 'junit:junit:4.12'
     kaptTest "com.google.dagger:dagger-compiler:$dagger_version"
     androidTestImplementation 'androidx.test:runner:1.1.1'
