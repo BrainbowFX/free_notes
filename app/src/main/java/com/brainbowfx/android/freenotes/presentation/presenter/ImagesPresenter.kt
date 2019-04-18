@@ -43,9 +43,9 @@ class ImagesPresenter : MvpPresenter<ImagesView>() {
         )
     }
 
-    suspend fun takePhoto(url: String): Boolean = if (url.isNotEmpty()) takePhoto.execute(url) else false
+    private suspend fun takePhoto(url: String): Boolean = if (url.isNotEmpty()) takePhoto.execute(url) else false
 
-    suspend fun createImageFile(): String = try {
+    private suspend fun createImageFile(): String = try {
         withContext(coroutineDispatchersProvider.getIODispatcher()) { createImageFile.execute(Unit) }
     } catch (ioException: IOException) {
         ""

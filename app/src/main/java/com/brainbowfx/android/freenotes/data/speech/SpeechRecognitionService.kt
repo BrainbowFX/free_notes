@@ -10,13 +10,11 @@ import javax.inject.Inject
 import javax.inject.Named
 
 @Activity
-class SpeechRecognitionService @Inject constructor() : RecognitionListener {
-
-    @field:[Inject Named(RECOGNIZER_INTENT_ID)]
-    lateinit var recognitionIntent: Intent
-
-    @Inject
-    lateinit var speechRecognizer: SpeechRecognizer
+class SpeechRecognitionService @Inject constructor(
+    @Named(RECOGNIZER_INTENT_ID) private val recognitionIntent: Intent,
+    private val speechRecognizer: SpeechRecognizer
+) :
+    RecognitionListener {
 
     private var subscriber: SpeechRecognitionSubscriber? = null
 
