@@ -4,25 +4,24 @@ import androidx.core.os.bundleOf
 import androidx.navigation.NavController
 import com.brainbowfx.android.freenotes.R
 import com.brainbowfx.android.freenotes.di.scopes.ActivityPerInstance
-import com.brainbowfx.android.freenotes.domain.router.Router
+import com.brainbowfx.android.freenotes.domain.router.NotesEditRouter
 import javax.inject.Inject
 
 @ActivityPerInstance
-class RouterImpl @Inject constructor(
-    val navigationController: NavController?) : Router {
+class NotesEditRouterImpl @Inject constructor(private val navigationController: NavController?) : NotesEditRouter {
 
     private var onDestinationChangedListener: NavController.OnDestinationChangedListener? = null
 
-    override fun navigateToNotesEdit(id: Long, duplicate: Boolean) {
+    override fun navigateNext(id: Long, duplicate: Boolean) {
         val bundle = bundleOf("id" to id, "duplicate" to duplicate)
         navigationController?.navigate(R.id.action_notesListFragment_to_notesEditFragment, bundle)
     }
 
-    override fun navigateToNotesEdit() {
+    override fun navigateNext() {
         navigationController?.navigate(R.id.action_notesListFragment_to_notesEditFragment)
     }
 
-    override fun navigateToNotesEdit(id: Long) {
+    override fun navigateNext(id: Long) {
         val bundle = bundleOf("id" to id)
         navigationController?.navigate(R.id.action_notesListFragment_to_notesEditFragment, bundle)
     }
