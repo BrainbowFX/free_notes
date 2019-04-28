@@ -12,7 +12,7 @@ import kotlinx.coroutines.*
 import javax.inject.Inject
 
 @InjectViewState
-class NotesListPresenter @Inject constructor() : MvpPresenter<NotesListView>() {
+class NotesListPresenter : MvpPresenter<NotesListView>() {
 
     private var job: Job? = null
 

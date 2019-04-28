@@ -114,6 +114,10 @@ class NotesEditFragment : MvpAppCompatFragment(), SpeechView, NotesEditView, Ima
 
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+    }
+
     //Lifecycle methods
     override fun onStop() {
         super.onStop()
@@ -121,7 +125,7 @@ class NotesEditFragment : MvpAppCompatFragment(), SpeechView, NotesEditView, Ima
         val inputText = tietInputText.text.toString()
         val images = imagesListAdapter.getItems()
 
-        notePresenter.onStop(title, inputText, images)
+        notePresenter.onSave(title, inputText, images)
     }
 
     override fun onDestroy() {

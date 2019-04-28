@@ -62,7 +62,7 @@ class NotePresenter(private val argId: Long?, private val argDuplicate: Boolean?
         viewState.setArgs(note.id, false)
     }
 
-    fun onStop(title: String, inputText: String, imagesPaths: MutableList<String>) {
+    fun onSave(title: String, inputText: String, imagesPaths: MutableList<String>) {
         note.title = title
         note.text = inputText
         note.imagePaths = imagesPaths
