@@ -6,13 +6,13 @@ import com.brainbowfx.android.freenotes.domain.CoroutineDispatchersProvider
 import com.brainbowfx.android.freenotes.domain.entities.Note
 import com.brainbowfx.android.freenotes.domain.interactor.DeleteNote
 import com.brainbowfx.android.freenotes.domain.interactor.GetNotesList
-import com.brainbowfx.android.freenotes.domain.router.Router
+import com.brainbowfx.android.freenotes.domain.router.NotesEditRouter
 import com.brainbowfx.android.freenotes.presentation.view.contract.NotesListView
 import kotlinx.coroutines.*
 import javax.inject.Inject
 
 @InjectViewState
-class NotesListPresenter @Inject constructor() : MvpPresenter<NotesListView>() {
+class NotesListPresenter : MvpPresenter<NotesListView>() {
 
     private var job: Job? = null
 
@@ -26,7 +26,7 @@ class NotesListPresenter @Inject constructor() : MvpPresenter<NotesListView>() {
     lateinit var dispatchersProvider: CoroutineDispatchersProvider
 
     @Inject
-    lateinit var router: Router
+    lateinit var notesEditRouter: NotesEditRouter
 
     fun start() {
         job = GlobalScope.launch(dispatchersProvider.getMainDispatcher()) {
@@ -41,7 +41,7 @@ class NotesListPresenter @Inject constructor() : MvpPresenter<NotesListView>() {
     }
 
     fun onNoteSelected(note: Note) {
-        router.navigateToNotesEdit(note.id)
+        notesEditRouter.navigateNext(note.id)
     }
 
     fun onNoteDeleted(note: Note, position: Int) {
@@ -52,7 +52,7 @@ class NotesListPresenter @Inject constructor() : MvpPresenter<NotesListView>() {
     }
 
     fun onNoteDuplicated(note: Note) {
-        router.navigateToNotesEdit(note.id, true)
+        notesEditRouter.navigateNext(note.id, true)
     }
 
 

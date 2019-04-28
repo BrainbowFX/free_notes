@@ -1,8 +1,8 @@
 package com.brainbowfx.android.freenotes.di.modules.binders
 
 import com.brainbowfx.android.freenotes.di.scopes.ActivityPerInstance
-import com.brainbowfx.android.freenotes.domain.router.Router
-import com.brainbowfx.android.freenotes.presentation.navigation.RouterImpl
+import com.brainbowfx.android.freenotes.domain.router.NotesEditRouter
+import com.brainbowfx.android.freenotes.presentation.navigation.NotesEditRouterImpl
 import dagger.Binds
 import dagger.Module
 
@@ -11,5 +11,5 @@ abstract class ActivityPerInstanceBindersModule {
 
     @ActivityPerInstance
     @Binds
-    abstract fun bindRouter(routerImpl: RouterImpl): Router
+    abstract fun bindRouter(routerImpl: NotesEditRouterImpl): NotesEditRouter
 }

@@ -16,7 +16,7 @@ import com.brainbowfx.android.freenotes.domain.CoroutineDispatchersProvider
 import com.brainbowfx.android.freenotes.domain.abstraction.CameraController
 import com.brainbowfx.android.freenotes.domain.abstraction.ImageViewer
 import com.brainbowfx.android.freenotes.domain.mappers.Mapper
-import com.brainbowfx.android.freenotes.domain.router.Router
+import com.brainbowfx.android.freenotes.domain.router.NotesEditRouter
 import com.brainbowfx.android.freenotes.presentation.App
 import com.brainbowfx.android.freenotes.presentation.utils.PermissionManager
 import com.google.android.material.bottomappbar.BottomAppBar
@@ -42,11 +42,11 @@ class MainActivity : MvpAppCompatActivity(), PermissionManager, CameraController
     private var iconBack: Drawable? = null
     private var iconAdd: Drawable? = null
 
-    private var addNoteClickListener = View.OnClickListener { router.navigateToNotesEdit() }
-    private var returnBackClickListener = View.OnClickListener { router.returnBack() }
+    private var addNoteClickListener = View.OnClickListener { notesEditRouter.navigateNext() }
+    private var returnBackClickListener = View.OnClickListener { notesEditRouter.returnBack() }
 
     @Inject
-    lateinit var router: Router
+    lateinit var notesEditRouter: NotesEditRouter
 
     @Inject
     lateinit var urlToUriMapper: Mapper<String, Uri>
@@ -69,7 +69,7 @@ class MainActivity : MvpAppCompatActivity(), PermissionManager, CameraController
 
         floatingActionButton.setOnClickListener(addNoteClickListener)
 
-        router.addCallback {
+        notesEditRouter.addCallback {
             when (it) {
                 R.id.notesListFragment -> setFabButtonStateAdd()
                 R.id.notesEditFragment -> setFabButtonStateBack()
@@ -97,7 +97,7 @@ class MainActivity : MvpAppCompatActivity(), PermissionManager, CameraController
     }
 
     override fun onBackPressed() {
-        if (!router.returnBack()) finish()
+        if (!notesEditRouter.returnBack()) finish()
     }
 
     //Lifycycle methods
