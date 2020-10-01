@@ -2,10 +2,11 @@ package com.brainbowfx.android.freenotes.presentation.utils
 
 import androidx.recyclerview.widget.DiffUtil
 import com.brainbowfx.android.freenotes.di.scopes.Activity
+import com.brainbowfx.android.freenotes.di.scopes.ActivityPerInstance
 import com.brainbowfx.android.freenotes.domain.entities.Note
 import javax.inject.Inject
 
-@Activity
+@ActivityPerInstance
 class NotesDiffCalback @Inject constructor() : DiffUtil.Callback() {
 
     private var oldData: List<Note> = listOf()

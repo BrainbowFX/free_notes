@@ -6,7 +6,12 @@ import dagger.Component
 import javax.inject.Singleton
 
 @Singleton
-@Component(modules = [AppModule::class, DatabaseModule::class, FilesModule::class, SingletoneBindersModule::class])
+@Component(modules = [
+    AppModule::class,
+    DatabaseModule::class,
+    FilesModule::class,
+    SingletoneBindersModule::class
+])
 interface ApplicationComponent {
-    fun activitySubcomponent(): ActivitySubcomponent.Builder
+    fun activityPerInstanceSubComponent(): ActivityPerInstanceSubcomponent.Builder
 }

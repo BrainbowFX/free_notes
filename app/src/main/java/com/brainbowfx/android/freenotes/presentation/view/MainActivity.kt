@@ -22,12 +22,16 @@ import com.brainbowfx.android.freenotes.presentation.utils.PermissionManager
 import com.google.android.material.bottomappbar.BottomAppBar
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.*
+import java.lang.Runnable
 import javax.inject.Inject
 
 class MainActivity : MvpAppCompatActivity(), PermissionManager, CameraController, ImageViewer {
 
-    private val REQUEST_PERMISSION_CODE = 1
-    private val REQUEST_TAKE_PHOTO_CODE = 2
+    companion object {
+        private const val REQUEST_PERMISSION_CODE = 1
+        private const val REQUEST_TAKE_PHOTO_CODE = 2
+        private const val FAB_ANIMATION_DELAY = 120L
+    }
 
     override var onCameraResult: ((success: Boolean) -> Unit)? = null
 
@@ -58,8 +62,8 @@ class MainActivity : MvpAppCompatActivity(), PermissionManager, CameraController
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        App.Instance.plusActivitySubcomponent()
-        App.Instance.plusActivityPerInstanceSubcomponent(this)?.inject(this)
+        App.Instance.plusActivityPerInstanceSubComponent()
+        App.Instance.plusActivitySubComponent(this)?.inject(this)
 
         iconBack = ContextCompat.getDrawable(this, R.drawable.ic_arrow_back)
         iconAdd = ContextCompat.getDrawable(this, R.drawable.ic_add)
@@ -78,22 +82,25 @@ class MainActivity : MvpAppCompatActivity(), PermissionManager, CameraController
     }
 
     private fun setFabButtonStateAdd() {
-        runWithDelay(120) { bottomAppBar.fabAlignmentMode = BottomAppBar.FAB_ALIGNMENT_MODE_CENTER }
-        floatingActionButton.setOnClickListener(addNoteClickListener)
-        floatingActionButton.setImageDrawable(iconAdd)
+        floatingActionButton.postDelayed(
+            {
+                bottomAppBar.fabAlignmentMode = BottomAppBar.FAB_ALIGNMENT_MODE_CENTER
+                floatingActionButton.setOnClickListener(addNoteClickListener)
+                floatingActionButton.setImageDrawable(iconAdd)
+            },
+            FAB_ANIMATION_DELAY
+        )
     }
 
     private fun setFabButtonStateBack() {
-        runWithDelay(120) { bottomAppBar.fabAlignmentMode = BottomAppBar.FAB_ALIGNMENT_MODE_END }
-        floatingActionButton.setOnClickListener(returnBackClickListener)
-        floatingActionButton.setImageDrawable(iconBack)
-    }
-
-    private fun runWithDelay(delay: Long, run: () -> Unit) {
-        GlobalScope.launch(dispatchersProvider.getMainDispatcher()) {
-            delay(delay)
-            run()
-        }
+        floatingActionButton.postDelayed(
+            {
+                bottomAppBar.fabAlignmentMode = BottomAppBar.FAB_ALIGNMENT_MODE_END
+                floatingActionButton.setOnClickListener(returnBackClickListener)
+                floatingActionButton.setImageDrawable(iconBack)
+            },
+            FAB_ANIMATION_DELAY
+        )
     }
 
     override fun onBackPressed() {
@@ -108,8 +115,8 @@ class MainActivity : MvpAppCompatActivity(), PermissionManager, CameraController
 
     override fun onDestroy() {
         super.onDestroy()
-        App.Instance.clearActivityPerInstanceSubcomponent()
-        if (!isSaveInstanceStateCalled) App.Instance.clearActivitySubcomponent()
+        App.Instance.clearActivitySubComponent()
+        if (!isSaveInstanceStateCalled) App.Instance.clearActivityPerInstanceSubComponent()
     }
 
     //PermissionManager implementation methods
@@ -121,14 +128,22 @@ class MainActivity : MvpAppCompatActivity(), PermissionManager, CameraController
         grantedPermissionsCallbacks[permission] = onPermissionGranted
         deniedPermissionsCallbacks[permission] = onPermissionDenied
 
-        if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(
+                this,
+                permission
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
             ActivityCompat.requestPermissions(this, arrayOf(permission), REQUEST_PERMISSION_CODE)
         } else {
             onPermissionGranted.invoke(permission)
         }
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == REQUEST_PERMISSION_CODE) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {

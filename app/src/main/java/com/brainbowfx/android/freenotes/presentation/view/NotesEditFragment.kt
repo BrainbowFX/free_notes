@@ -53,10 +53,10 @@ class NotesEditFragment : MvpAppCompatFragment(), SpeechView, NotesEditView, Ima
     private lateinit var ibDeleteImage: ImageButton
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        App.Instance.activityPerInstanceSubcomponent?.inject(this)
-        App.Instance.activityPerInstanceSubcomponent?.inject(speechPresenter)
-        App.Instance.activityPerInstanceSubcomponent?.inject(notePresenter)
-        App.Instance.activityPerInstanceSubcomponent?.inject(imagesPresenter)
+        App.Instance.activitySubComponent?.inject(this)
+        App.Instance.activitySubComponent?.inject(speechPresenter)
+        App.Instance.activitySubComponent?.inject(notePresenter)
+        App.Instance.activitySubComponent?.inject(imagesPresenter)
 
         return inflater.inflate(R.layout.fragment_note_edit, container, false)
     }
@@ -186,7 +186,11 @@ class NotesEditFragment : MvpAppCompatFragment(), SpeechView, NotesEditView, Ima
         Toast.makeText(context, getString(R.string.take_photo_failure), Toast.LENGTH_LONG).show()
     }
 
-    override fun showWriteExternaStoragePermissionDenied() {
+    override fun showCreateTempFileFailureError() {
+        Toast.makeText(context, getString(R.string.create_image_file_failure), Toast.LENGTH_LONG).show()
+    }
+
+    override fun showWriteExternalStoragePermissionDenied() {
         Toast.makeText(context, getString(R.string.write_external_storage_permission_denied), Toast.LENGTH_LONG).show()
     }
 

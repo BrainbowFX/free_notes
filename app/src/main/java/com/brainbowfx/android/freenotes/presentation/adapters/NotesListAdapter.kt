@@ -10,12 +10,13 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.brainbowfx.android.freenotes.R
 import com.brainbowfx.android.freenotes.di.scopes.Activity
+import com.brainbowfx.android.freenotes.di.scopes.ActivityPerInstance
 import com.brainbowfx.android.freenotes.domain.entities.Note
 import com.brainbowfx.android.freenotes.presentation.utils.NotesDiffCalback
 import com.bumptech.glide.Glide
 import javax.inject.Inject
 
-@Activity
+@ActivityPerInstance
 class NotesListAdapter @Inject constructor(
     layoutInflater: LayoutInflater,
     notesDiffCalback: NotesDiffCalback

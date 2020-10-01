@@ -4,11 +4,12 @@ import com.brainbowfx.android.freenotes.data.database.dao.NotesDao
 import com.brainbowfx.android.freenotes.data.database.models.NoteEntity
 import com.brainbowfx.android.freenotes.domain.repository.NotesRepository
 import com.brainbowfx.android.freenotes.di.scopes.Activity
+import com.brainbowfx.android.freenotes.di.scopes.ActivityPerInstance
 import com.brainbowfx.android.freenotes.domain.entities.Note
 import com.brainbowfx.android.freenotes.domain.mappers.Mapper
 import javax.inject.Inject
 
-@Activity
+@ActivityPerInstance
 class NotesRepositoryImpl @Inject constructor(
     private val forwardMapper: Mapper<Note, NoteEntity>,
     private val backwardMapper: Mapper<NoteEntity, Note>,

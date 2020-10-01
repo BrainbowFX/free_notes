@@ -3,10 +3,11 @@ package com.brainbowfx.android.freenotes.presentation
 import android.app.Application
 import androidx.appcompat.app.AppCompatActivity
 import com.brainbowfx.android.freenotes.di.components.ActivityPerInstanceSubcomponent
-import com.brainbowfx.android.freenotes.di.components.ActivitySubcomponent
+import com.brainbowfx.android.freenotes.di.components.ActivitySubComponent
 import com.brainbowfx.android.freenotes.di.components.ApplicationComponent
 import com.brainbowfx.android.freenotes.di.components.DaggerApplicationComponent
 import com.brainbowfx.android.freenotes.di.modules.*
+import kotlinx.coroutines.*
 
 class App: Application() {
 
@@ -15,12 +16,18 @@ class App: Application() {
     }
 
     lateinit var appComponent: ApplicationComponent
-    var activitySubcomponent: ActivitySubcomponent? = null
-    var activityPerInstanceSubcomponent: ActivityPerInstanceSubcomponent? = null
+    var activitySubComponent: ActivitySubComponent? = null
+    var activityPerInstanceSubComponent: ActivityPerInstanceSubcomponent? = null
+
+    private suspend fun doWork() {
+        delay(500)
+        Dispatchers.Main
+    }
 
     override fun onCreate() {
         super.onCreate()
         Instance = this
+
         appComponent = DaggerApplicationComponent.builder()
             .appModule(AppModule(this))
             .databaseModule(DatabaseModule())
@@ -28,23 +35,25 @@ class App: Application() {
             .build()
     }
 
-    fun plusActivitySubcomponent(): ActivitySubcomponent =
-        activitySubcomponent ?: appComponent.activitySubcomponent()
+    fun plusActivityPerInstanceSubComponent(): ActivityPerInstanceSubcomponent =
+        activityPerInstanceSubComponent ?: appComponent.activityPerInstanceSubComponent()
             .mappersModule(MappersModule())
             .speechRecognitionModule(SpeechRecognitionModule())
             .dateModule(DateModule())
-            .build().also { activitySubcomponent = it }
+            .build()
+            .also { activityPerInstanceSubComponent = it }
 
-    fun plusActivityPerInstanceSubcomponent(activity: AppCompatActivity): ActivityPerInstanceSubcomponent? =
-            activityPerInstanceSubcomponent ?: activitySubcomponent?.activityPerInstanceSubcomponent()
+    fun plusActivitySubComponent(activity: AppCompatActivity): ActivitySubComponent? =
+            activitySubComponent ?: activityPerInstanceSubComponent?.activitySubcomponent()
                 ?.activityModule(ActivityModule(activity))
-                ?.build().also { activityPerInstanceSubcomponent = it  }
+                ?.build()
+                .also { activitySubComponent = it  }
 
-    fun clearActivitySubcomponent() {
-        activitySubcomponent = null
+    fun clearActivitySubComponent() {
+        activitySubComponent = null
     }
 
-    fun clearActivityPerInstanceSubcomponent() {
-        activityPerInstanceSubcomponent = null
+    fun clearActivityPerInstanceSubComponent() {
+        activityPerInstanceSubComponent = null
     }
 }

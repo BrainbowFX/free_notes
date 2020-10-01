@@ -6,10 +6,11 @@ import android.speech.RecognitionListener
 import android.speech.SpeechRecognizer
 import com.brainbowfx.android.freenotes.RECOGNIZER_INTENT_ID
 import com.brainbowfx.android.freenotes.di.scopes.Activity
+import com.brainbowfx.android.freenotes.di.scopes.ActivityPerInstance
 import javax.inject.Inject
 import javax.inject.Named
 
-@Activity
+@ActivityPerInstance
 class SpeechRecognitionService @Inject constructor(
     @Named(RECOGNIZER_INTENT_ID) private val recognitionIntent: Intent,
     private val speechRecognizer: SpeechRecognizer

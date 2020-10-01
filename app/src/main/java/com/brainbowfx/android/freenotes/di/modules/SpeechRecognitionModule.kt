@@ -5,7 +5,7 @@ import android.content.Intent
 import android.speech.RecognizerIntent
 import android.speech.SpeechRecognizer
 import com.brainbowfx.android.freenotes.RECOGNIZER_INTENT_ID
-import com.brainbowfx.android.freenotes.di.scopes.Activity
+import com.brainbowfx.android.freenotes.di.scopes.ActivityPerInstance
 import dagger.Module
 import dagger.Provides
 import javax.inject.Named
@@ -14,12 +14,12 @@ import javax.inject.Named
 class SpeechRecognitionModule {
 
     @Provides
-    @Activity
+    @ActivityPerInstance
     fun provideSpeechRecognizer(applicationContext: Context): SpeechRecognizer =
         SpeechRecognizer.createSpeechRecognizer(applicationContext)
 
     @Provides
-    @Activity
+    @ActivityPerInstance
     @Named(RECOGNIZER_INTENT_ID)
     fun provideRecognizerIntent(): Intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
 

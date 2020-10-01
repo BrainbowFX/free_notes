@@ -27,7 +27,7 @@ class ImagesListAdapter @Inject constructor(
         setHasStableIds(true)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ImagesListAdapter.ViewHolder =
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
         ViewHolder(layoutInflater.inflate(R.layout.item_images_list, parent, false), urlToUriMapper)
 
     override fun getItemCount(): Int = imagesPaths.size

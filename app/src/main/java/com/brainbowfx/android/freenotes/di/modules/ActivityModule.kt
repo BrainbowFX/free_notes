@@ -5,7 +5,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import com.brainbowfx.android.freenotes.R
-import com.brainbowfx.android.freenotes.di.scopes.ActivityPerInstance
+import com.brainbowfx.android.freenotes.di.scopes.Activity
 import com.brainbowfx.android.freenotes.domain.abstraction.CameraController
 import com.brainbowfx.android.freenotes.domain.abstraction.ImageViewer
 import com.brainbowfx.android.freenotes.presentation.utils.PermissionManager
@@ -16,22 +16,22 @@ import dagger.Provides
 class ActivityModule(private var appCompatActivity: AppCompatActivity) {
 
     @Provides
-    @ActivityPerInstance
+    @Activity
     fun provideSupportFragmentManager(): FragmentManager? = appCompatActivity.supportFragmentManager
 
     @Provides
-    @ActivityPerInstance
+    @Activity
     fun providePermissionManager(): PermissionManager = appCompatActivity as PermissionManager
 
     @Provides
-    @ActivityPerInstance
+    @Activity
     fun provideNavigationController(): NavController? = appCompatActivity.findNavController(R.id.navigationHost)
 
     @Provides
-    @ActivityPerInstance
+    @Activity
     fun provideCameraController(): CameraController = appCompatActivity as CameraController
 
     @Provides
-    @ActivityPerInstance
+    @Activity
     fun provideImageViewer(): ImageViewer = appCompatActivity as ImageViewer
 }

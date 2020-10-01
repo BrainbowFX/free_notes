@@ -17,8 +17,8 @@ class NotesListFragment : BaseListFragment() {
     lateinit var presenter: NotesListPresenter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        App.Instance.activitySubcomponent?.inject(this)
-        App.Instance.activityPerInstanceSubcomponent?.inject(presenter)
+        App.Instance.activitySubComponent?.inject(presenter)
+        App.Instance.activityPerInstanceSubComponent?.inject(this)
         return super.onCreateView(inflater, container, savedInstanceState)
     }
 
