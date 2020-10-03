@@ -1,7 +1,11 @@
 package com.brainbowfx.android.freenotes.presentation.view
 
 import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -16,6 +20,7 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 
 import com.brainbowfx.android.freenotes.R
+import com.brainbowfx.android.freenotes.domain.mappers.Mapper
 import com.brainbowfx.android.freenotes.presentation.App
 import com.brainbowfx.android.freenotes.presentation.adapters.ImagesListAdapter
 import com.brainbowfx.android.freenotes.presentation.presenter.ImagesPresenter
@@ -29,6 +34,14 @@ import com.google.android.material.textfield.TextInputEditText
 import javax.inject.Inject
 
 class NotesEditFragment : MvpAppCompatFragment(), SpeechView, NotesEditView, ImagesView {
+
+    companion object {
+        private const val REQUEST_TAKE_PHOTO_CODE = 2
+        private const val IMAGE_CAPTURE_KEY = "imageUrl"
+    }
+
+    @Inject
+    lateinit var urlToUriMapper: Mapper<String, Uri>
 
     @InjectPresenter
     lateinit var speechPresenter: SpeechPresenter
@@ -52,7 +65,13 @@ class NotesEditFragment : MvpAppCompatFragment(), SpeechView, NotesEditView, Ima
 
     private lateinit var ibDeleteImage: ImageButton
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    private var imageCaptureUrl: String? = null
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         App.Instance.activitySubComponent?.inject(this)
         App.Instance.activitySubComponent?.inject(speechPresenter)
         App.Instance.activitySubComponent?.inject(notePresenter)
@@ -81,7 +100,8 @@ class NotesEditFragment : MvpAppCompatFragment(), SpeechView, NotesEditView, Ima
             StorageStrategy.createLongStorage()
         ).build()
         tracker.addObserver(object : SelectionTracker.SelectionObserver<Long>() {
-            override fun onSelectionChanged() = notePresenter.onImagesSelectionChanged(tracker.selection.size())
+            override fun onSelectionChanged() =
+                notePresenter.onImagesSelectionChanged(tracker.selection.size())
         })
         imagesListAdapter.setTracker(tracker)
 
@@ -96,7 +116,8 @@ class NotesEditFragment : MvpAppCompatFragment(), SpeechView, NotesEditView, Ima
                 notePresenter.onImagesDeleted(tracker.selection.toList())
         }
 
-        view.findViewById<View>(R.id.ibAddPhoto).setOnClickListener { imagesPresenter.onCameraButtonClicked() }
+        view.findViewById<View>(R.id.ibAddPhoto)
+            .setOnClickListener { imagesPresenter.onCameraButtonClicked() }
 
         view.findViewById<View>(R.id.ibRecordVoice).setOnTouchListener { _, event ->
             when (event.action) {
@@ -116,6 +137,31 @@ class NotesEditFragment : MvpAppCompatFragment(), SpeechView, NotesEditView, Ima
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
+        imageCaptureUrl?.let {
+            outState.putString(IMAGE_CAPTURE_KEY, it)
+        }
+    }
+
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+        imageCaptureUrl = savedInstanceState?.getString(IMAGE_CAPTURE_KEY)
+    }
+
+    override fun takePhoto(url: String) {
+        imageCaptureUrl = url
+        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        intent.resolveActivity(requireContext().packageManager)
+            ?.also {
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, urlToUriMapper.map(url))
+                startActivityForResult(intent, REQUEST_TAKE_PHOTO_CODE)
+            }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_TAKE_PHOTO_CODE && resultCode == Activity.RESULT_OK) {
+            imageCaptureUrl?.let(imagesPresenter::onPhotoTaken)
+        }
     }
 
     //Lifecycle methods
@@ -174,7 +220,8 @@ class NotesEditFragment : MvpAppCompatFragment(), SpeechView, NotesEditView, Ima
     }
 
     override fun showSpeechMessage() {
-        Toast.makeText(context, getString(R.string.text_to_speech_notification), Toast.LENGTH_LONG).show()
+        Toast.makeText(context, getString(R.string.text_to_speech_notification), Toast.LENGTH_LONG)
+            .show()
     }
 
     //ImagesView implentation methods
@@ -187,11 +234,16 @@ class NotesEditFragment : MvpAppCompatFragment(), SpeechView, NotesEditView, Ima
     }
 
     override fun showCreateTempFileFailureError() {
-        Toast.makeText(context, getString(R.string.create_image_file_failure), Toast.LENGTH_LONG).show()
+        Toast.makeText(context, getString(R.string.create_image_file_failure), Toast.LENGTH_LONG)
+            .show()
     }
 
     override fun showWriteExternalStoragePermissionDenied() {
-        Toast.makeText(context, getString(R.string.write_external_storage_permission_denied), Toast.LENGTH_LONG).show()
+        Toast.makeText(
+            context,
+            getString(R.string.write_external_storage_permission_denied),
+            Toast.LENGTH_LONG
+        ).show()
     }
 
     @ProvidePresenter

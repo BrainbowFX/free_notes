@@ -13,7 +13,6 @@ import androidx.core.content.ContextCompat
 import com.arellomobile.mvp.MvpAppCompatActivity
 import com.brainbowfx.android.freenotes.R
 import com.brainbowfx.android.freenotes.domain.CoroutineDispatchersProvider
-import com.brainbowfx.android.freenotes.domain.abstraction.CameraController
 import com.brainbowfx.android.freenotes.domain.abstraction.ImageViewer
 import com.brainbowfx.android.freenotes.domain.mappers.Mapper
 import com.brainbowfx.android.freenotes.domain.router.NotesEditRouter
@@ -21,19 +20,15 @@ import com.brainbowfx.android.freenotes.presentation.App
 import com.brainbowfx.android.freenotes.presentation.utils.PermissionManager
 import com.google.android.material.bottomappbar.BottomAppBar
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import kotlinx.coroutines.*
 import java.lang.Runnable
 import javax.inject.Inject
 
-class MainActivity : MvpAppCompatActivity(), PermissionManager, CameraController, ImageViewer {
+class MainActivity : MvpAppCompatActivity(), PermissionManager, ImageViewer {
 
     companion object {
         private const val REQUEST_PERMISSION_CODE = 1
-        private const val REQUEST_TAKE_PHOTO_CODE = 2
         private const val FAB_ANIMATION_DELAY = 120L
     }
-
-    override var onCameraResult: ((success: Boolean) -> Unit)? = null
 
     override var grantedPermissionsCallbacks: MutableMap<String, (String) -> Unit> = mutableMapOf()
     override var deniedPermissionsCallbacks: MutableMap<String, (String) -> Unit> = mutableMapOf()
@@ -156,25 +151,9 @@ class MainActivity : MvpAppCompatActivity(), PermissionManager, CameraController
         }
     }
 
-    //CameraController implementation methods
-    override fun takePhoto(url: String, onResult: ((success: Boolean) -> Unit)?) {
-        onCameraResult = onResult
-        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        intent.resolveActivity(packageManager)?.also {
-            intent.putExtra(MediaStore.EXTRA_OUTPUT, urlToUriMapper.map(url))
-            startActivityForResult(intent, REQUEST_TAKE_PHOTO_CODE)
-        }
-    }
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == REQUEST_TAKE_PHOTO_CODE) {
-            when (resultCode) {
-                Activity.RESULT_OK -> onCameraResult?.invoke(true)
-                Activity.RESULT_CANCELED -> onCameraResult?.invoke(false)
-                else -> onCameraResult?.invoke(false)
-            }
-        }
+
     }
 
     //ImageViewer implementation methods

@@ -1,11 +1,12 @@
 package com.brainbowfx.android.freenotes
 
 import com.brainbowfx.android.freenotes.di.DaggerTestComponentHolder
+import com.brainbowfx.android.freenotes.domain.CoroutineDispatchersProvider
 import com.brainbowfx.android.freenotes.domain.abstraction.FileUriProvider
 import com.brainbowfx.android.freenotes.domain.abstraction.ImageFileGenerator
 import com.brainbowfx.android.freenotes.domain.interactor.CreateImageFile
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
-import org.junit.Before
 import org.junit.Test
 import org.mockito.Mockito
 import javax.inject.Inject
@@ -22,33 +23,37 @@ class CreateImageFileTest {
     @Inject
     lateinit var fileUriProvider: FileUriProvider
 
-    private lateinit var createImageFile: CreateImageFile
+    @Inject
+    lateinit var coroutineDispatchersProvider: CoroutineDispatchersProvider
+
+    private var createImageFile: CreateImageFile
 
     @get:Rule
     var tempFolder: TemporaryFolder = TemporaryFolder()
 
-    @Before
-    fun setup(){
+    init {
         DaggerTestComponentHolder.testComponent.inject(this)
-        createImageFile = CreateImageFile(imageFileGenerator, fileUriProvider)
+        createImageFile = CreateImageFile(imageFileGenerator, fileUriProvider, coroutineDispatchersProvider)
+        Mockito.`when`(coroutineDispatchersProvider.getIODispatcher()).thenReturn(Dispatchers.Unconfined)
+        Mockito.`when`(coroutineDispatchersProvider.getMainDispatcher()).thenReturn(Dispatchers.Unconfined)
     }
 
     @Test
-    fun `test execute method when imageFileGenerator's generateImageFile method returns null should return empty string`(){
+    fun `test execute method when imageFileGenerator's generateImageFile method returns null should return null`(){
         Mockito.`when`(imageFileGenerator.generateImageFile()).thenReturn(null)
 
         runBlocking {
             val uri = createImageFile.execute(Unit)
-            assertEquals("", uri)
+            assertNull(uri)
         }
     }
 
     @Test
     fun `test execute method when imageFileGenerator's generateImageFile method returns file should return url string`(){
-        val filename = "tempfile"
-        val testfile = tempFolder.newFile(filename)
-        Mockito.`when`(imageFileGenerator.generateImageFile()).thenReturn(testfile)
-        Mockito.`when`(fileUriProvider.getUriForFile(testfile)).thenReturn(filename)
+        val filename = "tempFile"
+        val testFile = tempFolder.newFile(filename)
+        Mockito.`when`(imageFileGenerator.generateImageFile()).thenReturn(testFile)
+        Mockito.`when`(fileUriProvider.getUriForFile(testFile)).thenReturn(filename)
         runBlocking {
             val uri = createImageFile.execute(Unit)
             assertEquals(filename, uri)

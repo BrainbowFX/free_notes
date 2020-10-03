@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.brainbowfx.android.freenotes.R
 import com.brainbowfx.android.freenotes.domain.mappers.Mapper
 import com.bumptech.glide.Glide
+import kotlinx.android.synthetic.main.item_images_list.view.*
 import javax.inject.Inject
 
 class ImagesListAdapter @Inject constructor(
@@ -73,9 +74,6 @@ class ImagesListAdapter @Inject constructor(
     }
 
     class ViewHolder(val root: View, val urlToUriMapper: Mapper<String, Uri>) : RecyclerView.ViewHolder(root) {
-        val arivNoteImage = root.findViewById<ImageView>(R.id.arivNoteImage)
-        val ivImageCheckedIndicator = root.findViewById<ImageView>(R.id.ivImageCheckedIndicator)
-
         fun getItemDetails(): ItemDetailsLookup.ItemDetails<Long> =
             object : ItemDetailsLookup.ItemDetails<Long>() {
                 override fun getPosition(): Int = adapterPosition
@@ -85,9 +83,9 @@ class ImagesListAdapter @Inject constructor(
         fun getId(): Long = adapterPosition.toLong()
 
         fun bind(imagePath: String, isActivated: Boolean = false) {
-            Glide.with(root.context).load(urlToUriMapper.map(imagePath)).into(arivNoteImage)
+            Glide.with(root.context).load(urlToUriMapper.map(imagePath)).into(root.arivNoteImage)
             itemView.isActivated = isActivated
-            ivImageCheckedIndicator.visibility = if (isActivated) View.VISIBLE else View.INVISIBLE
+            root.ivImageCheckedIndicator.visibility = if (isActivated) View.VISIBLE else View.INVISIBLE
         }
     }
 }

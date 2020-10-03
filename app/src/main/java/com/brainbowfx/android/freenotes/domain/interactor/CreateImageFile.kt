@@ -7,7 +7,7 @@ import kotlinx.coroutines.withContext
 import java.io.IOException
 import javax.inject.Inject
 
-class ImageFileCreator @Inject constructor(
+class CreateImageFile @Inject constructor(
     private val imageFileGenerator: ImageFileGenerator,
     private val fileUriProvider: FileUriProvider,
     private val coroutineDispatchersProvider: CoroutineDispatchersProvider

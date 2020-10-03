@@ -10,7 +10,7 @@ import dagger.Subcomponent
 @ActivityPerInstance
 interface ActivityPerInstanceSubcomponent {
 
-    fun activitySubcomponent(): ActivitySubComponent.Builder
+    fun activitySubComponent(): ActivitySubComponent.Builder
 
     @Subcomponent.Builder
     interface Builder {

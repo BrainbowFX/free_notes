@@ -44,7 +44,7 @@ class App: Application() {
             .also { activityPerInstanceSubComponent = it }
 
     fun plusActivitySubComponent(activity: AppCompatActivity): ActivitySubComponent? =
-            activitySubComponent ?: activityPerInstanceSubComponent?.activitySubcomponent()
+            activitySubComponent ?: activityPerInstanceSubComponent?.activitySubComponent()
                 ?.activityModule(ActivityModule(activity))
                 ?.build()
                 .also { activitySubComponent = it  }
