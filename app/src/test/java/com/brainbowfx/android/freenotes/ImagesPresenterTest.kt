@@ -58,7 +58,7 @@ class ImagesPresenterTest {
     }
 
     @Test
-    fun `test onCameraButtonClicked when called callback onPermissionGranted and createImageFile returns valid url should call ImagesView takePhoto method`() {
+    fun `test onCameraButtonClicked when called callback onPermissionGranted and createImageFile returns valid url should call ImagesView checkCameraExistence method`() {
         val testUrl = "testUrl"
 
         runBlocking {
@@ -67,7 +67,7 @@ class ImagesPresenterTest {
 
         captureSecondArg().invoke(PERMISSION_WRITE_EXTERNAL_STORAGE)
 
-        verify(imagesPresenter.viewState).takePhoto(testUrl)
+        verify(imagesPresenter.viewState).checkCameraExistence(testUrl)
     }
 
     @Test

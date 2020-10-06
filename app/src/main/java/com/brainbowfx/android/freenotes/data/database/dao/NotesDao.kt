@@ -2,27 +2,24 @@ package com.brainbowfx.android.freenotes.data.database.dao
 
 import androidx.room.*
 import com.brainbowfx.android.freenotes.data.database.models.NoteEntity
+import com.brainbowfx.android.freenotes.data.database.models.projections.NoteWithImages
 
 @Dao
-interface NotesDao {
+interface NotesDao : BaseDao<NoteEntity> {
 
-    @Insert
-    fun insert(note: NoteEntity): Long
+    @Query("SELECT *, `rowid` FROM notes WHERE `rowid` = :noteId AND is_recycled = :recycled")
+    suspend fun get(noteId: Long, recycled: Boolean = false): NoteEntity
 
-    @Delete
-    fun delete(note: NoteEntity)
+    @Query("DELETE FROM notes WHERE `rowid` in (:noteIds)")
+    suspend fun delete(noteIds: LongArray)
 
-    @Query("DELETE FROM notes WHERE `rowid` in (:notesIds)")
-    fun delete(notesIds: LongArray)
+    @Transaction
+    @Query("SELECT *, `rowid` FROM notes WHERE `rowid` = :noteId AND is_recycled = :recycled")
+    suspend fun getNoteWithImages(noteId: Long, recycled: Boolean = false): NoteWithImages
 
-    @Update(onConflict = OnConflictStrategy.REPLACE)
-    fun update(note: NoteEntity)
-
-    @Query("SELECT *, `rowid` FROM notes WHERE `rowid`=(:noteId)")
-    fun get(noteId: Long): NoteEntity
-
-    @Query("SELECT *, `rowid` FROM notes")
-    fun getAll(): List<NoteEntity>
+    @Transaction
+    @Query("SELECT *, `rowid` FROM notes WHERE is_recycled = :recycled")
+    suspend fun getNoteWithImages(recycled: Boolean = false): List<NoteWithImages>
 
 
 }

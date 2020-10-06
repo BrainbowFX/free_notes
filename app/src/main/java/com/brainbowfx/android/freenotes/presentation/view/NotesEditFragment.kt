@@ -20,6 +20,7 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 
 import com.brainbowfx.android.freenotes.R
+import com.brainbowfx.android.freenotes.domain.entities.Image
 import com.brainbowfx.android.freenotes.domain.mappers.Mapper
 import com.brainbowfx.android.freenotes.presentation.App
 import com.brainbowfx.android.freenotes.presentation.adapters.ImagesListAdapter
@@ -107,7 +108,7 @@ class NotesEditFragment : MvpAppCompatFragment(), SpeechView, NotesEditView, Ima
 
         imagesListAdapter.setListener {
             val imagePath = imagesListAdapter.getItem(it)
-            notePresenter.onImageSelected(imagePath)
+            notePresenter.onImageSelected(imagePath.url)
         }
 
         ibDeleteImage = view.findViewById(R.id.ibDeleteImages)
@@ -147,16 +148,6 @@ class NotesEditFragment : MvpAppCompatFragment(), SpeechView, NotesEditView, Ima
         imageCaptureUrl = savedInstanceState?.getString(IMAGE_CAPTURE_KEY)
     }
 
-    override fun takePhoto(url: String) {
-        imageCaptureUrl = url
-        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        intent.resolveActivity(requireContext().packageManager)
-            ?.also {
-                intent.putExtra(MediaStore.EXTRA_OUTPUT, urlToUriMapper.map(url))
-                startActivityForResult(intent, REQUEST_TAKE_PHOTO_CODE)
-            }
-    }
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_TAKE_PHOTO_CODE && resultCode == Activity.RESULT_OK) {
@@ -193,7 +184,7 @@ class NotesEditFragment : MvpAppCompatFragment(), SpeechView, NotesEditView, Ima
         tietInputText.setText(inputText)
     }
 
-    override fun setImages(imagesPaths: MutableList<String>) {
+    override fun setImages(imagesPaths: MutableList<Image>) {
         imagesListAdapter.setData(imagesPaths)
     }
 
@@ -224,17 +215,36 @@ class NotesEditFragment : MvpAppCompatFragment(), SpeechView, NotesEditView, Ima
             .show()
     }
 
-    //ImagesView implentation methods
-    override fun setImage(image: String) {
+    //ImagesView implementation methods
+    override fun setImage(image: Image) {
         imagesListAdapter.addItem(image)
     }
 
+    override fun checkCameraExistence(url: String) {
+        Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+            .resolveActivity(requireContext().packageManager)
+            ?.let {
+                imagesPresenter.onCameraExists(url)
+            } ?: imagesPresenter.onCameraNotExists()
+    }
+
+    override fun takePhoto(url: String) {
+        imageCaptureUrl = url
+        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, urlToUriMapper.map(url))
+        startActivityForResult(intent, REQUEST_TAKE_PHOTO_CODE)
+    }
+
     override fun showTakePhotoFailureError() {
-        Toast.makeText(context, getString(R.string.take_photo_failure), Toast.LENGTH_LONG).show()
+        Toast.makeText(context, R.string.take_photo_failure, Toast.LENGTH_LONG).show()
+    }
+
+    override fun showNoCameraMessage() {
+        Toast.makeText(context, R.string.no_camera_message, Toast.LENGTH_LONG).show()
     }
 
     override fun showCreateTempFileFailureError() {
-        Toast.makeText(context, getString(R.string.create_image_file_failure), Toast.LENGTH_LONG)
+        Toast.makeText(context, R.string.create_image_file_failure, Toast.LENGTH_LONG)
             .show()
     }
 

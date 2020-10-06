@@ -30,7 +30,7 @@ class NotesListPresenter : MvpPresenter<NotesListView>() {
 
     fun start() {
         job = GlobalScope.launch(dispatchersProvider.getMainDispatcher()) {
-            val result = withContext(dispatchersProvider.getIODispatcher()) { getNotesList.execute(Unit) }
+            val result = withContext(dispatchersProvider.getIODispatcher()) { getNotesList.execute(false) }
             viewState.setData(result.toMutableList())
         }
     }

@@ -4,11 +4,12 @@ import com.arellomobile.mvp.MvpView
 import com.arellomobile.mvp.viewstate.strategy.OneExecutionStateStrategy
 import com.arellomobile.mvp.viewstate.strategy.SkipStrategy
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
+import com.brainbowfx.android.freenotes.domain.entities.Image
 
 interface ImagesView : MvpView {
 
     @StateStrategyType(OneExecutionStateStrategy::class)
-    fun setImage(image: String)
+    fun setImage(image: Image)
 
     @StateStrategyType(OneExecutionStateStrategy::class)
     fun showTakePhotoFailureError()
@@ -20,5 +21,11 @@ interface ImagesView : MvpView {
     fun showWriteExternalStoragePermissionDenied()
 
     @StateStrategyType(OneExecutionStateStrategy::class)
+    fun showNoCameraMessage()
+
+    @StateStrategyType(OneExecutionStateStrategy::class)
     fun takePhoto(url: String)
+
+    @StateStrategyType(SkipStrategy::class)
+    fun checkCameraExistence(url: String)
 }

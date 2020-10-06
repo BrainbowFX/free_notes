@@ -9,7 +9,6 @@ import com.brainbowfx.android.freenotes.presentation.presenter.NotesListPresente
 import com.brainbowfx.android.freenotes.presentation.presenter.SpeechPresenter
 import com.brainbowfx.android.freenotes.presentation.view.MainActivity
 import com.brainbowfx.android.freenotes.presentation.view.NotesEditFragment
-import com.brainbowfx.android.freenotes.presentation.view.NotesListFragment
 import dagger.Subcomponent
 
 @Subcomponent(modules = [ActivityModule::class, ActivityBindersModule::class])

@@ -11,4 +11,5 @@
     <string name="take_photo_failure">Не удалось создать фото</string>
     <string name="create_image_file_failure">Не удалось создать временный файл для фото</string>
     <string name="write_external_storage_permission_denied">Невозможно создать временный файл для съемки фото без разрешения на запись файлов</string>
+    <string name="no_camera_message">Отсутствует камера</string>
 </resources>

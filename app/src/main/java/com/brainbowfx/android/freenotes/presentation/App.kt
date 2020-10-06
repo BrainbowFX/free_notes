@@ -2,7 +2,7 @@ package com.brainbowfx.android.freenotes.presentation
 
 import android.app.Application
 import androidx.appcompat.app.AppCompatActivity
-import com.brainbowfx.android.freenotes.di.components.ActivityPerInstanceSubcomponent
+import com.brainbowfx.android.freenotes.di.components.ActivityPerInstanceSubComponent
 import com.brainbowfx.android.freenotes.di.components.ActivitySubComponent
 import com.brainbowfx.android.freenotes.di.components.ApplicationComponent
 import com.brainbowfx.android.freenotes.di.components.DaggerApplicationComponent
@@ -17,7 +17,7 @@ class App: Application() {
 
     lateinit var appComponent: ApplicationComponent
     var activitySubComponent: ActivitySubComponent? = null
-    var activityPerInstanceSubComponent: ActivityPerInstanceSubcomponent? = null
+    var activityPerInstanceSubComponent: ActivityPerInstanceSubComponent? = null
 
     private suspend fun doWork() {
         delay(500)
@@ -35,7 +35,7 @@ class App: Application() {
             .build()
     }
 
-    fun plusActivityPerInstanceSubComponent(): ActivityPerInstanceSubcomponent =
+    fun plusActivityPerInstanceSubComponent(): ActivityPerInstanceSubComponent =
         activityPerInstanceSubComponent ?: appComponent.activityPerInstanceSubComponent()
             .mappersModule(MappersModule())
             .speechRecognitionModule(SpeechRecognitionModule())

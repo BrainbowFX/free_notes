@@ -2,13 +2,13 @@ package com.brainbowfx.android.freenotes.data.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import androidx.room.TypeConverters
+import com.brainbowfx.android.freenotes.data.database.dao.ImagesDao
 import com.brainbowfx.android.freenotes.data.database.dao.NotesDao
+import com.brainbowfx.android.freenotes.data.database.models.ImageEntity
 import com.brainbowfx.android.freenotes.data.database.models.NoteEntity
-import com.brainbowfx.android.freenotes.data.mappers.Converters
 
-@Database(entities = [NoteEntity::class], version = 1, exportSchema = false)
-@TypeConverters(Converters::class)
+@Database(entities = [NoteEntity::class, ImageEntity::class], version = 1, exportSchema = false)
 abstract class ApplicationDatabase : RoomDatabase() {
     abstract fun getNotesDao(): NotesDao
+    abstract fun getImagesDao(): ImagesDao
 }

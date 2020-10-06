@@ -1,7 +1,7 @@
 package com.brainbowfx.android.freenotes.di.components
 
 import com.brainbowfx.android.freenotes.di.modules.*
-import com.brainbowfx.android.freenotes.di.modules.binders.SingletoneBindersModule
+import com.brainbowfx.android.freenotes.di.modules.binders.SingletonBindersModule
 import dagger.Component
 import javax.inject.Singleton
 
@@ -10,8 +10,8 @@ import javax.inject.Singleton
     AppModule::class,
     DatabaseModule::class,
     FilesModule::class,
-    SingletoneBindersModule::class
+    SingletonBindersModule::class
 ])
 interface ApplicationComponent {
-    fun activityPerInstanceSubComponent(): ActivityPerInstanceSubcomponent.Builder
+    fun activityPerInstanceSubComponent(): ActivityPerInstanceSubComponent.Builder
 }

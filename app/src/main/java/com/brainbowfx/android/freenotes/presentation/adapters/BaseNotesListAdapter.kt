@@ -58,9 +58,9 @@ open class BaseNotesListAdapter constructor(
             holder.tvNotesHeader.text = note.title
         } else holder.tvNotesHeader.visibility = View.GONE
 
-        if (note.imagePaths.isNotEmpty()) {
+        if (note.images.isNotEmpty()) {
             holder.ivNotesTitleImage.visibility = View.VISIBLE
-            Glide.with(holder.root.context).load(note.imagePaths[0]).into(holder.ivNotesTitleImage)
+            Glide.with(holder.root.context).load(note.images[0]).into(holder.ivNotesTitleImage)
         } else holder.ivNotesTitleImage.visibility = View.GONE
     }
 

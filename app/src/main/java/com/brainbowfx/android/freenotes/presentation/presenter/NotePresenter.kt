@@ -5,6 +5,7 @@ import com.arellomobile.mvp.MvpPresenter
 import com.brainbowfx.android.freenotes.DATETIME_NAMED_ID
 import com.brainbowfx.android.freenotes.domain.CoroutineDispatchersProvider
 import com.brainbowfx.android.freenotes.domain.abstraction.ImageViewer
+import com.brainbowfx.android.freenotes.domain.entities.Image
 import com.brainbowfx.android.freenotes.domain.entities.Note
 import com.brainbowfx.android.freenotes.domain.interactor.AddNote
 import com.brainbowfx.android.freenotes.domain.interactor.GetNote
@@ -58,14 +59,14 @@ class NotePresenter(private val argId: Long?, private val argDuplicate: Boolean?
     private fun initViewFields(note:Note) {
         viewState.setInputText(note.text)
         viewState.setTitle(note.title)
-        viewState.setImages(note.imagePaths)
+        viewState.setImages(note.images)
         viewState.setArgs(note.id, false)
     }
 
-    fun onSave(title: String, inputText: String, imagesPaths: MutableList<String>) {
+    fun onSave(title: String, inputText: String, images: MutableList<Image>) {
         note.title = title
         note.text = inputText
-        note.imagePaths = imagesPaths
+        note.images = images
 
         updateNote(note)
     }
@@ -82,8 +83,8 @@ class NotePresenter(private val argId: Long?, private val argDuplicate: Boolean?
     }
 
     private suspend fun prepareNote(note: Note, duplicate: Boolean): Note {
-        if (duplicate) note.id = -1L
-        if (note.id == -1L) note.id = addNote.execute(note)
+        if (duplicate) note.id = 0L
+        if (note.id == 0L) note.id = addNote.execute(note)
         return note
     }
 

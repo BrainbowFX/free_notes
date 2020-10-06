@@ -3,6 +3,7 @@ package com.brainbowfx.android.freenotes.presentation.presenter
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
 import com.brainbowfx.android.freenotes.domain.CoroutineDispatchersProvider
+import com.brainbowfx.android.freenotes.domain.entities.Image
 import com.brainbowfx.android.freenotes.domain.interactor.CreateImageFile
 import com.brainbowfx.android.freenotes.presentation.PERMISSION_WRITE_EXTERNAL_STORAGE
 import com.brainbowfx.android.freenotes.presentation.utils.PermissionManager
@@ -38,15 +39,23 @@ class ImagesPresenter : MvpPresenter<ImagesView>(), CoroutineScope {
                     } catch (ioException: IOException) {
                         viewState.showCreateTempFileFailureError()
                         null
-                    }?.let(viewState::takePhoto)
+                    }?.let(viewState::checkCameraExistence)
                 }
             },
             { viewState.showWriteExternalStoragePermissionDenied() }
         )
     }
 
+    fun onCameraExists(url: String) {
+        viewState.takePhoto(url)
+    }
+
+    fun onCameraNotExists() {
+        viewState.showNoCameraMessage()
+    }
+
     fun onPhotoTaken(url: String) {
-        viewState.setImage(url)
+        viewState.setImage(Image(url = url))
     }
 
     override fun onDestroy() {
