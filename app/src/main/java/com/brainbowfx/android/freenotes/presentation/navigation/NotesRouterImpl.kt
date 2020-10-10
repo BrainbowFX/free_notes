@@ -4,12 +4,12 @@ import androidx.core.os.bundleOf
 import androidx.navigation.NavController
 import com.brainbowfx.android.freenotes.R
 import com.brainbowfx.android.freenotes.di.scopes.Activity
-import com.brainbowfx.android.freenotes.domain.router.NotesEditRouter
+import com.brainbowfx.android.freenotes.domain.router.NotesRouter
 import javax.inject.Inject
 
 @Activity
-class NotesEditRouterImpl @Inject constructor(private val navigationController: NavController?) :
-    NotesEditRouter {
+class NotesRouterImpl @Inject constructor(private val navigationController: NavController?) :
+    NotesRouter {
 
     private var onDestinationChangedListener: NavController.OnDestinationChangedListener? = null
 

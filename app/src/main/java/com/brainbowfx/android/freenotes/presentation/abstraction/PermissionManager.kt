@@ -1,4 +1,4 @@
-package com.brainbowfx.android.freenotes.presentation.utils
+package com.brainbowfx.android.freenotes.presentation.abstraction
 
 interface PermissionManager {
 

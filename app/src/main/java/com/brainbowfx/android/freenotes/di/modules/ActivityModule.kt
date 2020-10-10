@@ -7,7 +7,8 @@ import androidx.navigation.findNavController
 import com.brainbowfx.android.freenotes.R
 import com.brainbowfx.android.freenotes.di.scopes.Activity
 import com.brainbowfx.android.freenotes.domain.abstraction.ImageViewer
-import com.brainbowfx.android.freenotes.presentation.utils.PermissionManager
+import com.brainbowfx.android.freenotes.presentation.abstraction.FloatingActionButtonOwner
+import com.brainbowfx.android.freenotes.presentation.abstraction.PermissionManager
 import dagger.Module
 import dagger.Provides
 
@@ -29,4 +30,8 @@ class ActivityModule(private var appCompatActivity: AppCompatActivity) {
     @Provides
     @Activity
     fun provideImageViewer(): ImageViewer = appCompatActivity as ImageViewer
+
+    @Provides
+    @Activity
+    fun provideFloatingActionButtonOwner(): FloatingActionButtonOwner = appCompatActivity as FloatingActionButtonOwner
 }

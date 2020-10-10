@@ -1,12 +1,12 @@
 package com.brainbowfx.android.freenotes.presentation.presenter
 
 import com.arellomobile.mvp.InjectViewState
-import com.arellomobile.mvp.MvpPresenter
 import com.brainbowfx.android.freenotes.domain.CoroutineDispatchersProvider
 import com.brainbowfx.android.freenotes.domain.entities.Image
 import com.brainbowfx.android.freenotes.domain.interactor.CreateImageFile
+import com.brainbowfx.android.freenotes.domain.interactor.DeleteImages
 import com.brainbowfx.android.freenotes.presentation.PERMISSION_WRITE_EXTERNAL_STORAGE
-import com.brainbowfx.android.freenotes.presentation.utils.PermissionManager
+import com.brainbowfx.android.freenotes.presentation.abstraction.PermissionManager
 import com.brainbowfx.android.freenotes.presentation.view.contract.ImagesView
 import kotlinx.coroutines.*
 import java.io.IOException
@@ -14,9 +14,7 @@ import javax.inject.Inject
 import kotlin.coroutines.CoroutineContext
 
 @InjectViewState
-class ImagesPresenter : MvpPresenter<ImagesView>(), CoroutineScope {
-
-    private val parentJob = SupervisorJob()
+class ImagesPresenter : ScopedPresenter<ImagesView>() {
 
     @Inject
     lateinit var createImageFile: CreateImageFile
@@ -25,10 +23,14 @@ class ImagesPresenter : MvpPresenter<ImagesView>(), CoroutineScope {
     lateinit var permissionManager: PermissionManager
 
     @Inject
-    lateinit var coroutineDispatchersProvider: CoroutineDispatchersProvider
+    lateinit var deleteImages: DeleteImages
 
-    override val coroutineContext: CoroutineContext
-        get() = coroutineDispatchersProvider.getMainDispatcher() + parentJob
+    @Inject
+    override lateinit var coroutineDispatchersProvider: CoroutineDispatchersProvider
+
+    override val coroutineContext: CoroutineContext by lazy {
+        coroutineDispatchersProvider.getMainDispatcher() + SupervisorJob()
+    }
 
     fun onCameraButtonClicked() {
         permissionManager.checkPermission(PERMISSION_WRITE_EXTERNAL_STORAGE,
@@ -46,6 +48,13 @@ class ImagesPresenter : MvpPresenter<ImagesView>(), CoroutineScope {
         )
     }
 
+    fun onDeleteImages(images: List<Image>) {
+        launch {
+            deleteImages.execute(images)
+            viewState.deleteImages(images)
+        }
+    }
+
     fun onCameraExists(url: String) {
         viewState.takePhoto(url)
     }
@@ -60,7 +69,7 @@ class ImagesPresenter : MvpPresenter<ImagesView>(), CoroutineScope {
 
     override fun onDestroy() {
         super.onDestroy()
-        parentJob.cancel()
+        coroutineContext[Job]?.cancel()
     }
 
 

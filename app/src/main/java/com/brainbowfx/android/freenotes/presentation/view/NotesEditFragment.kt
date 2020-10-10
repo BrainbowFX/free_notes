@@ -12,6 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.Toast
+import androidx.core.widget.doOnTextChanged
 import androidx.recyclerview.selection.*
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -23,6 +24,8 @@ import com.brainbowfx.android.freenotes.R
 import com.brainbowfx.android.freenotes.domain.entities.Image
 import com.brainbowfx.android.freenotes.domain.mappers.Mapper
 import com.brainbowfx.android.freenotes.presentation.App
+import com.brainbowfx.android.freenotes.presentation.abstraction.FloatingActionButtonOwner
+import com.brainbowfx.android.freenotes.presentation.adapters.BaseAdapter
 import com.brainbowfx.android.freenotes.presentation.adapters.ImagesListAdapter
 import com.brainbowfx.android.freenotes.presentation.presenter.ImagesPresenter
 import com.brainbowfx.android.freenotes.presentation.presenter.SpeechPresenter
@@ -31,6 +34,7 @@ import com.brainbowfx.android.freenotes.presentation.utils.NotesImagesItemDetail
 import com.brainbowfx.android.freenotes.presentation.view.contract.ImagesView
 import com.brainbowfx.android.freenotes.presentation.view.contract.NotesEditView
 import com.brainbowfx.android.freenotes.presentation.view.contract.SpeechView
+import com.google.android.material.bottomappbar.BottomAppBar
 import com.google.android.material.textfield.TextInputEditText
 import javax.inject.Inject
 
@@ -54,6 +58,9 @@ class NotesEditFragment : MvpAppCompatFragment(), SpeechView, NotesEditView, Ima
     lateinit var imagesPresenter: ImagesPresenter
 
     @Inject
+    lateinit var floatingActionButtonOwner: FloatingActionButtonOwner
+
+    @Inject
     lateinit var imagesListAdapter: ImagesListAdapter
 
     private lateinit var tracker: SelectionTracker<Long>
@@ -68,16 +75,20 @@ class NotesEditFragment : MvpAppCompatFragment(), SpeechView, NotesEditView, Ima
 
     private var imageCaptureUrl: String? = null
 
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+
+        App.Instance.activitySubComponent?.inject(speechPresenter)
+        App.Instance.activitySubComponent?.inject(notePresenter)
+        App.Instance.activitySubComponent?.inject(imagesPresenter)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         App.Instance.activitySubComponent?.inject(this)
-        App.Instance.activitySubComponent?.inject(speechPresenter)
-        App.Instance.activitySubComponent?.inject(notePresenter)
-        App.Instance.activitySubComponent?.inject(imagesPresenter)
-
         return inflater.inflate(R.layout.fragment_note_edit, container, false)
     }
 
@@ -86,14 +97,20 @@ class NotesEditFragment : MvpAppCompatFragment(), SpeechView, NotesEditView, Ima
         super.onViewCreated(view, savedInstanceState)
 
         tietTitle = view.findViewById(R.id.tietTitle)
+        tietTitle.doOnTextChanged { text, _, _, _ ->
+            notePresenter.onTitleChanged(text.toString())
+        }
         tietInputText = view.findViewById(R.id.tietInputText)
+        tietInputText.doOnTextChanged { text, _, _, _ ->
+            notePresenter.onContentTextChanged(text.toString())
+        }
 
         rvImagesList = view.findViewById(R.id.rvImagesList)
 
         rvImagesList.adapter = imagesListAdapter
         rvImagesList.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
 
-        tracker = SelectionTracker.Builder<Long>(
+        tracker = SelectionTracker.Builder(
             "notesSelection",
             rvImagesList,
             StableIdKeyProvider(rvImagesList),
@@ -106,15 +123,17 @@ class NotesEditFragment : MvpAppCompatFragment(), SpeechView, NotesEditView, Ima
         })
         imagesListAdapter.setTracker(tracker)
 
-        imagesListAdapter.setListener {
-            val imagePath = imagesListAdapter.getItem(it)
-            notePresenter.onImageSelected(imagePath.url)
+        imagesListAdapter.setListener { position ->
+            val image = imagesListAdapter.getItem(position)
+            notePresenter.onImageSelected(image.url)
         }
 
         ibDeleteImage = view.findViewById(R.id.ibDeleteImages)
         ibDeleteImage.setOnClickListener {
-            if (tracker.selection != null && !tracker.selection.isEmpty)
-                notePresenter.onImagesDeleted(tracker.selection.toList())
+            if (tracker.selection != null && !tracker.selection.isEmpty) {
+                val images = imagesListAdapter.getItemsById(tracker.selection.toList())
+                imagesPresenter.onDeleteImages(images)
+            }
         }
 
         view.findViewById<View>(R.id.ibAddPhoto)
@@ -155,25 +174,20 @@ class NotesEditFragment : MvpAppCompatFragment(), SpeechView, NotesEditView, Ima
         }
     }
 
-    //Lifecycle methods
-    override fun onStop() {
-        super.onStop()
-        val title = tietTitle.text.toString()
-        val inputText = tietInputText.text.toString()
-        val images = imagesListAdapter.getItems()
-
-        notePresenter.onSave(title, inputText, images)
-    }
-
     override fun onDestroy() {
         super.onDestroy()
         imagesListAdapter.removeListener()
     }
 
     //NotesEditView implementation
-    override fun setArgs(id: Long, duplicate: Boolean) {
-        arguments?.putLong("id", id)
-        arguments?.putBoolean("duplicate", duplicate)
+
+    override fun setupButton() {
+        floatingActionButtonOwner.setupButton(
+            R.drawable.ic_arrow_back,
+            BottomAppBar.FAB_ALIGNMENT_MODE_END
+        ) {
+            notePresenter.onFloatingButtonClicked()
+        }
     }
 
     override fun setTitle(title: String) {
@@ -196,11 +210,6 @@ class NotesEditFragment : MvpAppCompatFragment(), SpeechView, NotesEditView, Ima
         ibDeleteImage.visibility = View.INVISIBLE
     }
 
-    override fun removeImages(ids: List<Long>) {
-        imagesListAdapter.remove(ids)
-        tracker.clearSelection()
-    }
-
     //SpeechView implementation
     override fun showError(error: String) {
         Toast.makeText(context, error, Toast.LENGTH_LONG).show()
@@ -217,7 +226,13 @@ class NotesEditFragment : MvpAppCompatFragment(), SpeechView, NotesEditView, Ima
 
     //ImagesView implementation methods
     override fun setImage(image: Image) {
-        imagesListAdapter.addItem(image)
+        notePresenter.onImageAdded(image)
+        tracker.clearSelection()
+    }
+
+    override fun deleteImages(images: List<Image>) {
+        notePresenter.onImagesRemoved(images)
+        tracker.clearSelection()
     }
 
     override fun checkCameraExistence(url: String) {

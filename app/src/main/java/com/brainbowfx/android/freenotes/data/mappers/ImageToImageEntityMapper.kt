@@ -9,6 +9,7 @@ class ImageToImageEntityMapper : Mapper<Image, ImageEntity> {
         ImageEntity(
             id = id,
             noteId = noteId,
+            imageId = input.imageId,
             url = url
         )
     }

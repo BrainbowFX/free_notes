@@ -27,7 +27,7 @@
         <argument
                 android:name="id"
                 app:argType="long"
-                android:defaultValue="-1L"/>
+                android:defaultValue="0L"/>
         <argument
                 android:name="duplicate"
                 app:argType="boolean"

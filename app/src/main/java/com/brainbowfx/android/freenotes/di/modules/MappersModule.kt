@@ -6,7 +6,7 @@ import com.brainbowfx.android.freenotes.data.database.models.ImageEntity
 import com.brainbowfx.android.freenotes.data.database.models.NoteEntity
 import com.brainbowfx.android.freenotes.data.database.models.projections.NoteWithImages
 import com.brainbowfx.android.freenotes.data.mappers.*
-import com.brainbowfx.android.freenotes.di.scopes.ActivityPerInstance
+import com.brainbowfx.android.freenotes.di.scopes.Presenter
 import com.brainbowfx.android.freenotes.domain.entities.Image
 import com.brainbowfx.android.freenotes.domain.entities.Note
 import com.brainbowfx.android.freenotes.domain.mappers.Mapper
@@ -19,25 +19,25 @@ import javax.inject.Named
 class MappersModule {
 
     @Provides
-    @ActivityPerInstance
+    @Presenter
     fun provideNotesToNotesEntityMapper(@Named(DATETIME_NAMED_ID) simpleDateFormat: SimpleDateFormat): Mapper<Note, NoteEntity> =
         NotesToNotesEntityMapper(simpleDateFormat)
 
     @Provides
-    @ActivityPerInstance
+    @Presenter
     fun provideImageToImageEntityMapper(): Mapper<Image, ImageEntity> = ImageToImageEntityMapper()
 
     @Provides
-    @ActivityPerInstance
+    @Presenter
     fun provideImageEntityToImageMapper(): Mapper<ImageEntity, Image> = ImageEntityToImageMapper()
 
     @Provides
-    @ActivityPerInstance
+    @Presenter
     fun provideNotesEntityToNotesMapper(@Named(DATETIME_NAMED_ID) simpleDateFormat: SimpleDateFormat, mapper: Mapper<ImageEntity, Image>): Mapper<NoteWithImages, Note> =
         NotesWithImagesToNotesMapper(simpleDateFormat, mapper)
 
     @Provides
-    @ActivityPerInstance
+    @Presenter
     fun provideUrlToUriMapper(): Mapper<String, Uri> = UrlToUriMapper()
 
 }

@@ -13,5 +13,5 @@ import javax.inject.Singleton
     SingletonBindersModule::class
 ])
 interface ApplicationComponent {
-    fun activityPerInstanceSubComponent(): ActivityPerInstanceSubComponent.Builder
+    fun presenterSubComponent(): PresenterSubComponent.Builder
 }

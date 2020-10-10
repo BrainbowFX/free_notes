@@ -7,19 +7,23 @@ import com.brainbowfx.android.freenotes.data.database.models.projections.NoteWit
 @Dao
 interface NotesDao : BaseDao<NoteEntity> {
 
-    @Query("SELECT *, `rowid` FROM notes WHERE `rowid` = :noteId AND is_recycled = :recycled")
+    @Query("SELECT * FROM notes WHERE id = :noteId AND is_recycled = :recycled")
     suspend fun get(noteId: Long, recycled: Boolean = false): NoteEntity
 
-    @Query("DELETE FROM notes WHERE `rowid` in (:noteIds)")
+    @Transaction
+    @Query("DELETE FROM notes WHERE id in (:noteIds)")
     suspend fun delete(noteIds: LongArray)
 
     @Transaction
-    @Query("SELECT *, `rowid` FROM notes WHERE `rowid` = :noteId AND is_recycled = :recycled")
+    @Query("SELECT * FROM notes WHERE id = :noteId AND is_recycled = :recycled")
     suspend fun getNoteWithImages(noteId: Long, recycled: Boolean = false): NoteWithImages
 
     @Transaction
-    @Query("SELECT *, `rowid` FROM notes WHERE is_recycled = :recycled")
+    @Query("SELECT * FROM notes WHERE is_recycled = :recycled")
     suspend fun getNoteWithImages(recycled: Boolean = false): List<NoteWithImages>
+
+    @Query("SELECT * FROM notes")
+    suspend fun getAll(): List<NoteEntity>
 
 
 }

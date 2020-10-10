@@ -10,21 +10,22 @@ import com.brainbowfx.android.freenotes.domain.entities.Note
 import com.brainbowfx.android.freenotes.domain.interactor.AddNote
 import com.brainbowfx.android.freenotes.domain.interactor.GetNote
 import com.brainbowfx.android.freenotes.domain.interactor.UpdateNote
+import com.brainbowfx.android.freenotes.domain.router.NotesRouter
 import com.brainbowfx.android.freenotes.presentation.view.contract.NotesEditView
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Named
+import kotlin.collections.ArrayList
+import kotlin.coroutines.CoroutineContext
 
 @InjectViewState
-class NotePresenter(private val argId: Long?, private val argDuplicate: Boolean?) : MvpPresenter<NotesEditView>() {
+class NotePresenter(private val argId: Long?, private val argDuplicate: Boolean?) :
+    ScopedPresenter<NotesEditView>() {
 
     @Inject
-    lateinit var dispatchersProvider: CoroutineDispatchersProvider
+    override lateinit var coroutineDispatchersProvider: CoroutineDispatchersProvider
 
     @Inject
     lateinit var imageViewer: ImageViewer
@@ -38,37 +39,74 @@ class NotePresenter(private val argId: Long?, private val argDuplicate: Boolean?
     @Inject
     lateinit var updateNote: UpdateNote
 
+    @Inject
+    lateinit var notesRouter: NotesRouter
+
     @field:[Inject Named(DATETIME_NAMED_ID)]
     lateinit var simpleDateFormat: SimpleDateFormat
 
-    private lateinit var note: Note
-
-    private var job: Job? = null
+    private var note: Note? = null
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
-        if (argId != null && argDuplicate != null) job = start(argId, argDuplicate)
-    }
 
-    private fun start(id: Long, duplicate: Boolean): Job =
-        GlobalScope.launch(dispatchersProvider.getMainDispatcher()) {
-            note = withContext(dispatchersProvider.getIODispatcher()) { prepareNote(getNote(id), duplicate) }
-            initViewFields(note)
+        if (argId == null || argId == 0L) {
+            note = Note(dateTime = simpleDateFormat.format(Date()))
+        } else {
+            launch {
+                note = getNote.execute(argId).also(this@NotePresenter::initViewFields)
+                if (argDuplicate == true) {
+                    note?.id = 0
+                }
+            }
         }
 
-    private fun initViewFields(note:Note) {
-        viewState.setInputText(note.text)
-        viewState.setTitle(note.title)
-        viewState.setImages(note.images)
-        viewState.setArgs(note.id, false)
+        viewState.setupButton()
     }
 
-    fun onSave(title: String, inputText: String, images: MutableList<Image>) {
-        note.title = title
-        note.text = inputText
-        note.images = images
+    private fun initViewFields(note: Note) {
+        viewState.setInputText(note.text)
+        viewState.setTitle(note.title)
+        viewState.setImages(ArrayList(note.images))
+    }
 
-        updateNote(note)
+    fun onTitleChanged(titleString: String) {
+        note?.title = titleString
+    }
+
+    fun onContentTextChanged(bodyString: String) {
+        note?.text = bodyString
+    }
+
+    fun onImageAdded(image: Image) {
+        note?.images?.let {
+            it.add(image)
+            viewState.setImages(ArrayList(it))
+        }
+    }
+
+    fun onImagesRemoved(images: List<Image>) {
+        note?.images?.let {
+            it.removeAll(images)
+            viewState.setImages(ArrayList(it))
+        }
+    }
+
+    private suspend fun saveNote() {
+        note?.let {
+            if (note?.id == 0L) {
+                note?.id = addNote.execute(it)
+            } else {
+                updateNote.execute(it)
+            }
+        }
+    }
+
+    fun onFloatingButtonClicked() {
+        launch {
+            saveNote()
+            notesRouter.returnBack()
+        }
     }
 
     fun onImageSelected(url: String) = imageViewer.showImage(url)
@@ -77,23 +115,5 @@ class NotePresenter(private val argId: Long?, private val argDuplicate: Boolean?
         if (itemsCount > 0) viewState.showDeleteButton()
         else viewState.hideDeleteButton()
     }
-
-    fun onImagesDeleted(ids: List<Long>) {
-        viewState.removeImages(ids)
-    }
-
-    private suspend fun prepareNote(note: Note, duplicate: Boolean): Note {
-        if (duplicate) note.id = 0L
-        if (note.id == 0L) note.id = addNote.execute(note)
-        return note
-    }
-
-    private fun updateNote(note: Note): Job =
-        GlobalScope.launch(dispatchersProvider.getIODispatcher()) {
-            updateNote.execute(note)
-        }
-
-    private suspend fun getNote(id: Long): Note =
-        if (id != -1L) getNote.execute(id) else Note(dateTime = simpleDateFormat.format(Date()))
 
 }

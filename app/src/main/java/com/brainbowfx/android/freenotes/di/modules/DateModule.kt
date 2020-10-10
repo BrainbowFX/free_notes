@@ -4,7 +4,7 @@ import com.brainbowfx.android.freenotes.DATETIME
 import com.brainbowfx.android.freenotes.DATETIME_NAMED_ID
 import com.brainbowfx.android.freenotes.TIMESTAMP
 import com.brainbowfx.android.freenotes.TIMESTAMP_NAMED_ID
-import com.brainbowfx.android.freenotes.di.scopes.ActivityPerInstance
+import com.brainbowfx.android.freenotes.di.scopes.Presenter
 import dagger.Module
 import dagger.Provides
 import java.text.SimpleDateFormat
@@ -15,15 +15,15 @@ import javax.inject.Named
 class DateModule {
 
     @Provides
-    @ActivityPerInstance
+    @Presenter
     fun provideDefaultLocale(): Locale = Locale.getDefault()
 
-    @ActivityPerInstance
+    @Presenter
     @Provides
     @Named(TIMESTAMP_NAMED_ID)
     fun provideTimeStampSimpeDateFormat(locale: Locale): SimpleDateFormat = SimpleDateFormat(TIMESTAMP, locale)
 
-    @ActivityPerInstance
+    @Presenter
     @Provides
     @Named(DATETIME_NAMED_ID)
     fun provideDateTimeSimpeDateFormat(locale: Locale): SimpleDateFormat = SimpleDateFormat(DATETIME, locale)

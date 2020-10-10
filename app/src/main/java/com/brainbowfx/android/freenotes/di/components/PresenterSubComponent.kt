@@ -1,8 +1,8 @@
 package com.brainbowfx.android.freenotes.di.components
 
 import com.brainbowfx.android.freenotes.di.modules.*
-import com.brainbowfx.android.freenotes.di.modules.binders.ActivityPerInstanceBindersModule
-import com.brainbowfx.android.freenotes.di.scopes.ActivityPerInstance
+import com.brainbowfx.android.freenotes.di.modules.binders.PresenterBindersModule
+import com.brainbowfx.android.freenotes.di.scopes.Presenter
 import com.brainbowfx.android.freenotes.presentation.view.NotesListFragment
 import dagger.Subcomponent
 
@@ -10,12 +10,12 @@ import dagger.Subcomponent
     modules = [
         DateModule::class,
         SpeechRecognitionModule::class,
-        ActivityPerInstanceBindersModule::class,
+        PresenterBindersModule::class,
         MappersModule::class
     ]
 )
-@ActivityPerInstance
-interface ActivityPerInstanceSubComponent {
+@Presenter
+interface PresenterSubComponent {
 
     fun activitySubComponent(): ActivitySubComponent.Builder
 
@@ -24,8 +24,6 @@ interface ActivityPerInstanceSubComponent {
         fun dateModule(dateModule: DateModule): Builder
         fun speechRecognitionModule(speechRecognitionModule: SpeechRecognitionModule): Builder
         fun mappersModule(mappersModule: MappersModule): Builder
-        fun build(): ActivityPerInstanceSubComponent
+        fun build(): PresenterSubComponent
     }
-
-    fun inject(notesListFragment: NotesListFragment)
 }

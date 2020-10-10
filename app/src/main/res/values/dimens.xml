@@ -15,4 +15,5 @@
     <dimen name="text_caption">12sp</dimen>
     <dimen name="input_text_min_height">128dp</dimen>
     <dimen name="notes_image_list_size">164dp</dimen>
+    <dimen name="notes_image_size">128dp</dimen>
 </resources>

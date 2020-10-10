@@ -4,71 +4,51 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.PopupMenu
 import android.widget.TextView
-import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.RecyclerView
 import com.brainbowfx.android.freenotes.R
 import com.brainbowfx.android.freenotes.di.scopes.Activity
 import com.brainbowfx.android.freenotes.domain.entities.Note
-import com.brainbowfx.android.freenotes.presentation.utils.NotesDiffCalback
+import com.brainbowfx.android.freenotes.presentation.utils.NotesDiffCallback
 import com.bumptech.glide.Glide
-import javax.inject.Inject
 
 @Activity
 open class BaseNotesListAdapter constructor(
     private val layoutInflater: LayoutInflater,
-    private val notesDiffCalback: NotesDiffCalback
+    notesDiffCallback: NotesDiffCallback
 ) :
-    RecyclerView.Adapter<BaseNotesListAdapter.ViewHolder>() {
-
-    private var notes: MutableList<Note> = mutableListOf()
-
-    interface BaseListener {
-        fun onItemClicked(position: Int)
-    }
-
-    fun getItem(position: Int): Note {
-        return notes[position]
-    }
-
-    fun setData(notes: MutableList<Note>) {
-        notesDiffCalback.setup(this.notes, notes)
-        DiffUtil.calculateDiff(notesDiffCalback).dispatchUpdatesTo(this)
-        this.notes = notes
-    }
-
-    fun removeAt(position: Int) {
-        notes.removeAt(position)
-        notifyItemRemoved(position)
-    }
+    BaseAdapter<Note, BaseNotesListAdapter.ViewHolder>(notesDiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
         ViewHolder(layoutInflater.inflate(R.layout.item_notes_list, parent, false))
 
-    override fun getItemCount(): Int = notes.size
+    class ViewHolder(itemView: View) : BaseAdapter.ViewHolder<Note>(itemView) {
+        private val ivNotesTitleImage: ImageView = itemView.findViewById(R.id.ivNotesTitleImage)
+        private val tvNotesHeader: TextView = itemView.findViewById(R.id.tvNotesHeader)
+        private val tvNotesText: TextView = itemView.findViewById(R.id.tvNotesText)
+        private val tvNotesDate: TextView = itemView.findViewById(R.id.tvNotesDate)
+        val ivMenu: ImageView = itemView.findViewById(R.id.ibMenu)
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val note = notes[position]
-        holder.tvNotesText.text = note.text
-        holder.tvNotesDate.text = note.dateTime
+        override fun onBind(item: Note) {
+            tvNotesText.text = item.text
+            tvNotesDate.text = item.dateTime
 
-        if (note.title.isNotEmpty()) {
-            holder.tvNotesHeader.visibility = View.VISIBLE
-            holder.tvNotesHeader.text = note.title
-        } else holder.tvNotesHeader.visibility = View.GONE
+            if (item.title.isNotEmpty()) {
+                tvNotesHeader.visibility = View.VISIBLE
+                tvNotesHeader.text = item.title
+            } else tvNotesHeader.visibility = View.GONE
 
-        if (note.images.isNotEmpty()) {
-            holder.ivNotesTitleImage.visibility = View.VISIBLE
-            Glide.with(holder.root.context).load(note.images[0]).into(holder.ivNotesTitleImage)
-        } else holder.ivNotesTitleImage.visibility = View.GONE
-    }
+            if (item.images.isNotEmpty()) {
+                ivNotesTitleImage.visibility = View.VISIBLE
+                Glide.with(itemView.context).load(item.images.first().url).into(ivNotesTitleImage)
+            } else ivNotesTitleImage.visibility = View.GONE
+        }
 
-    class ViewHolder(val root: View) : RecyclerView.ViewHolder(root) {
-        val ivNotesTitleImage: ImageView = root.findViewById(R.id.ivNotesTitleImage)
-        val tvNotesHeader: TextView = root.findViewById(R.id.tvNotesHeader)
-        val tvNotesText: TextView = root.findViewById(R.id.tvNotesText)
-        val tvNotesDate: TextView = root.findViewById(R.id.tvNotesDate)
-        val ivMenu: ImageView = root.findViewById(R.id.ibMenu)
+        override fun unBind() {
+            tvNotesText.text = null
+            tvNotesDate.text = null
+            tvNotesHeader.text = null
+            ivNotesTitleImage.setImageDrawable(null)
+            ivMenu.setOnClickListener(null)
+        }
     }
 }

@@ -9,7 +9,7 @@ class NoteWithImages(
     @Embedded
     val noteEntity: NoteEntity,
     @Relation(
-        parentColumn = "rowid",
+        parentColumn = "id",
         entityColumn = "note_id"
     )
     val images: List<ImageEntity>

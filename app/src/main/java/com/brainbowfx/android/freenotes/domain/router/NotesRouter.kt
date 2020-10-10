@@ -1,6 +1,6 @@
 package com.brainbowfx.android.freenotes.domain.router
 
-interface NotesEditRouter : Router {
+interface NotesRouter : Router {
 
     fun navigateNext(id: Long)
 
