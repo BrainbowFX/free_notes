@@ -12,9 +12,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.core.widget.doOnTextChanged
 import androidx.recyclerview.selection.*
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.arellomobile.mvp.MvpAppCompatFragment
 import com.arellomobile.mvp.presenter.InjectPresenter
@@ -25,7 +25,6 @@ import com.brainbowfx.android.freenotes.domain.entities.Image
 import com.brainbowfx.android.freenotes.domain.mappers.Mapper
 import com.brainbowfx.android.freenotes.presentation.App
 import com.brainbowfx.android.freenotes.presentation.abstraction.FloatingActionButtonOwner
-import com.brainbowfx.android.freenotes.presentation.adapters.BaseAdapter
 import com.brainbowfx.android.freenotes.presentation.adapters.ImagesListAdapter
 import com.brainbowfx.android.freenotes.presentation.presenter.ImagesPresenter
 import com.brainbowfx.android.freenotes.presentation.presenter.SpeechPresenter
@@ -75,6 +74,12 @@ class NotesEditFragment : MvpAppCompatFragment(), SpeechView, NotesEditView, Ima
 
     private var imageCaptureUrl: String? = null
 
+    private var onBackPressedCallback = object : OnBackPressedCallback(true) {
+        override fun handleOnBackPressed() {
+            notePresenter.onReturnBack()
+        }
+    }
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
@@ -108,7 +113,6 @@ class NotesEditFragment : MvpAppCompatFragment(), SpeechView, NotesEditView, Ima
         rvImagesList = view.findViewById(R.id.rvImagesList)
 
         rvImagesList.adapter = imagesListAdapter
-        rvImagesList.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
 
         tracker = SelectionTracker.Builder(
             "notesSelection",
@@ -153,6 +157,11 @@ class NotesEditFragment : MvpAppCompatFragment(), SpeechView, NotesEditView, Ima
             }
         }
 
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            onBackPressedCallback
+        )
+
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -186,7 +195,7 @@ class NotesEditFragment : MvpAppCompatFragment(), SpeechView, NotesEditView, Ima
             R.drawable.ic_arrow_back,
             BottomAppBar.FAB_ALIGNMENT_MODE_END
         ) {
-            notePresenter.onFloatingButtonClicked()
+            notePresenter.onReturnBack()
         }
     }
 

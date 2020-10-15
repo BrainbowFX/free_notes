@@ -3,11 +3,12 @@ package com.brainbowfx.android.freenotes.presentation.adapters
 import android.view.LayoutInflater
 import android.widget.PopupMenu
 import com.brainbowfx.android.freenotes.R
+import com.brainbowfx.android.freenotes.di.scopes.Activity
 import com.brainbowfx.android.freenotes.di.scopes.Presenter
 import com.brainbowfx.android.freenotes.presentation.utils.NotesDiffCallback
 import javax.inject.Inject
 
-@Presenter
+@Activity
 class NotesListAdapter @Inject constructor(
     layoutInflater: LayoutInflater,
     notesDiffCallback: NotesDiffCallback

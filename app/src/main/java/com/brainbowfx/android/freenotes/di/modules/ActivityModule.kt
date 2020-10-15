@@ -1,5 +1,6 @@
 package com.brainbowfx.android.freenotes.di.modules
 
+import android.view.LayoutInflater
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentManager
 import androidx.navigation.NavController
@@ -34,4 +35,9 @@ class ActivityModule(private var appCompatActivity: AppCompatActivity) {
     @Provides
     @Activity
     fun provideFloatingActionButtonOwner(): FloatingActionButtonOwner = appCompatActivity as FloatingActionButtonOwner
+
+    @Provides
+    @Activity
+    fun provideLayoutInflater(): LayoutInflater = appCompatActivity.layoutInflater
+
 }

@@ -12,6 +12,7 @@ import com.brainbowfx.android.freenotes.domain.interactor.GetNote
 import com.brainbowfx.android.freenotes.domain.interactor.UpdateNote
 import com.brainbowfx.android.freenotes.domain.router.NotesRouter
 import com.brainbowfx.android.freenotes.presentation.view.contract.NotesEditView
+import com.brainbowfx.android.freenotes.presentation.whenNotNullOrEmpty
 import kotlinx.coroutines.*
 import java.text.SimpleDateFormat
 import java.util.*
@@ -93,16 +94,16 @@ class NotePresenter(private val argId: Long?, private val argDuplicate: Boolean?
     }
 
     private suspend fun saveNote() {
-        note?.let {
-            if (note?.id == 0L) {
-                note?.id = addNote.execute(it)
+        note?.whenNotNullOrEmpty {
+            if (it.id == 0L) {
+                it.id = addNote.execute(it)
             } else {
                 updateNote.execute(it)
             }
         }
     }
 
-    fun onFloatingButtonClicked() {
+    fun onReturnBack() {
         launch {
             saveNote()
             notesRouter.returnBack()

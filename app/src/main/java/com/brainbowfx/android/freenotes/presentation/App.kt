@@ -2,15 +2,23 @@ package com.brainbowfx.android.freenotes.presentation
 
 import android.app.Activity
 import android.app.Application
+import android.content.SharedPreferences
 import android.os.Bundle
+import android.os.SharedMemory
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
+import com.brainbowfx.android.freenotes.PREF_DARK_THEME
 import com.brainbowfx.android.freenotes.di.components.PresenterSubComponent
 import com.brainbowfx.android.freenotes.di.components.ActivitySubComponent
 import com.brainbowfx.android.freenotes.di.components.ApplicationComponent
 import com.brainbowfx.android.freenotes.di.components.DaggerApplicationComponent
 import com.brainbowfx.android.freenotes.di.modules.*
+import javax.inject.Inject
 
 class App : Application() {
+
+    @Inject
+    lateinit var sharedPreferences: SharedPreferences
 
     companion object {
         lateinit var Instance: App
@@ -61,7 +69,12 @@ class App : Application() {
             .appModule(AppModule(this))
             .databaseModule(DatabaseModule())
             .filesModule(FilesModule())
-            .build()
+            .build().also {
+                it.inject(this)
+            }
+
+        val theme = sharedPreferences.getInt(PREF_DARK_THEME, AppCompatDelegate.MODE_NIGHT_NO)
+        AppCompatDelegate.setDefaultNightMode(theme)
     }
 
     private fun plusActivityPerInstanceSubComponent(): PresenterSubComponent =

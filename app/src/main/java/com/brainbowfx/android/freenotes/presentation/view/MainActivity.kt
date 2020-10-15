@@ -1,13 +1,17 @@
 package com.brainbowfx.android.freenotes.presentation.view
 
 import android.content.Intent
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
+import android.view.MenuItem
 import android.view.View
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.arellomobile.mvp.MvpAppCompatActivity
+import com.brainbowfx.android.freenotes.PREF_DARK_THEME
 import com.brainbowfx.android.freenotes.R
 import com.brainbowfx.android.freenotes.domain.abstraction.ImageViewer
 import com.brainbowfx.android.freenotes.domain.mappers.Mapper
@@ -37,14 +41,55 @@ class MainActivity : MvpAppCompatActivity(), PermissionManager, ImageViewer, Flo
     @Inject
     lateinit var urlToUriMapper: Mapper<String, Uri>
 
+    @Inject
+    lateinit var preferences: SharedPreferences
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         App.Instance.activitySubComponent?.inject(this)
 
-        bottomAppBar = findViewById(R.id.bottomAppBar)
         floatingActionButton = findViewById(R.id.floatingActionButton)
+        setupBottomNavBar()
+    }
+
+    private fun setupBottomNavBar() {
+        bottomAppBar = findViewById(R.id.bottomAppBar)
+        bottomAppBar.menu
+            .add("")
+            .setIcon(
+                if (preferences.getInt(
+                        PREF_DARK_THEME,
+                        AppCompatDelegate.MODE_NIGHT_NO
+                    ) == AppCompatDelegate.MODE_NIGHT_NO
+                ) {
+                    R.drawable.ic_day
+                } else {
+                    R.drawable.ic_night
+                }
+            )
+            .setOnMenuItemClickListener {
+                switchTheme()
+                true
+            }
+            .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
+    }
+
+    private fun switchTheme() {
+        val iconWithTheme = if (preferences.getInt(
+                PREF_DARK_THEME,
+                AppCompatDelegate.MODE_NIGHT_NO
+            ) == AppCompatDelegate.MODE_NIGHT_NO
+        ) {
+            AppCompatDelegate.MODE_NIGHT_YES
+        } else {
+            AppCompatDelegate.MODE_NIGHT_NO
+        }
+
+        preferences.edit().putInt(PREF_DARK_THEME, iconWithTheme).apply()
+        window.setWindowAnimations(R.style.WindowAnimationTransition)
+        AppCompatDelegate.setDefaultNightMode(iconWithTheme)
     }
 
     //PermissionManager implementation

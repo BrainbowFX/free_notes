@@ -1,7 +1,9 @@
 package com.brainbowfx.android.freenotes.di.modules
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.view.LayoutInflater
+import com.brainbowfx.android.freenotes.PREFERENCES
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -15,6 +17,6 @@ class AppModule(private val appContext: Context) {
 
     @Provides
     @Singleton
-    fun provideLayoutInflatter(appContext: Context): LayoutInflater =
-        appContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+    fun getSharedPreferences(): SharedPreferences = appContext.getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE)
+
 }

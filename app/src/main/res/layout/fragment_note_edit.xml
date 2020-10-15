@@ -16,10 +16,7 @@
 
         <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/textInputLayout"
-                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
-                app:boxBackgroundColor="@android:color/transparent"
-                android:textColorHint="@color/colorPrimary"
-                android:background="@null"
+                style="@style/titleInputStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="parent"
@@ -30,7 +27,6 @@
 
             <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/tietTitle"
-                    android:background="@null"
                     android:singleLine="true"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -85,7 +81,8 @@
         <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvImagesList"
                 android:layout_marginTop="@dimen/cards_supporting_text_bottom_padding"
-                android:orientation="vertical"
+                android:orientation="horizontal"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/notes_image_list_size"
                 app:layout_constraintEnd_toEndOf="parent"
