@@ -36,9 +36,6 @@ class MainActivity : MvpAppCompatActivity(), PermissionManager, ImageViewer, Flo
     private lateinit var floatingActionButton: FloatingActionButton
 
     @Inject
-    lateinit var notesRouter: NotesRouter
-
-    @Inject
     lateinit var urlToUriMapper: Mapper<String, Uri>
 
     @Inject
