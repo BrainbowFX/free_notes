@@ -20,9 +20,6 @@ class NotesListPresenter : ScopedPresenter<NotesListView>() {
     lateinit var deleteNote: DeleteNote
 
     @Inject
-    override lateinit var coroutineDispatchersProvider: CoroutineDispatchersProvider
-
-    @Inject
     lateinit var notesRouter: NotesRouter
 
     override fun onFirstViewAttach() {

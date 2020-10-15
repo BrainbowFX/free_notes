@@ -25,13 +25,6 @@ class ImagesPresenter : ScopedPresenter<ImagesView>() {
     @Inject
     lateinit var deleteImages: DeleteImages
 
-    @Inject
-    override lateinit var coroutineDispatchersProvider: CoroutineDispatchersProvider
-
-    override val coroutineContext: CoroutineContext by lazy {
-        coroutineDispatchersProvider.getMainDispatcher() + SupervisorJob()
-    }
-
     fun onCameraButtonClicked() {
         permissionManager.checkPermission(PERMISSION_WRITE_EXTERNAL_STORAGE,
             {

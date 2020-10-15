@@ -1,15 +1,12 @@
 package com.brainbowfx.android.freenotes.presentation.presenter
 
 import com.arellomobile.mvp.InjectViewState
-import com.arellomobile.mvp.MvpPresenter
 import com.brainbowfx.android.freenotes.DATETIME_NAMED_ID
-import com.brainbowfx.android.freenotes.domain.CoroutineDispatchersProvider
 import com.brainbowfx.android.freenotes.domain.abstraction.ImageViewer
 import com.brainbowfx.android.freenotes.domain.entities.Image
 import com.brainbowfx.android.freenotes.domain.entities.Note
-import com.brainbowfx.android.freenotes.domain.interactor.AddNote
+import com.brainbowfx.android.freenotes.domain.interactor.SaveNote
 import com.brainbowfx.android.freenotes.domain.interactor.GetNote
-import com.brainbowfx.android.freenotes.domain.interactor.UpdateNote
 import com.brainbowfx.android.freenotes.domain.router.NotesRouter
 import com.brainbowfx.android.freenotes.presentation.view.contract.NotesEditView
 import com.brainbowfx.android.freenotes.presentation.whenNotNullOrEmpty
@@ -19,14 +16,10 @@ import java.util.*
 import javax.inject.Inject
 import javax.inject.Named
 import kotlin.collections.ArrayList
-import kotlin.coroutines.CoroutineContext
 
 @InjectViewState
 class NotePresenter(private val argId: Long?, private val argDuplicate: Boolean?) :
     ScopedPresenter<NotesEditView>() {
-
-    @Inject
-    override lateinit var coroutineDispatchersProvider: CoroutineDispatchersProvider
 
     @Inject
     lateinit var imageViewer: ImageViewer
@@ -35,10 +28,7 @@ class NotePresenter(private val argId: Long?, private val argDuplicate: Boolean?
     lateinit var getNote: GetNote
 
     @Inject
-    lateinit var addNote: AddNote
-
-    @Inject
-    lateinit var updateNote: UpdateNote
+    lateinit var saveNote: SaveNote
 
     @Inject
     lateinit var notesRouter: NotesRouter
@@ -93,21 +83,14 @@ class NotePresenter(private val argId: Long?, private val argDuplicate: Boolean?
         }
     }
 
-    private suspend fun saveNote() {
+    fun onReturnBack() {
         note?.whenNotNullOrEmpty {
-            if (it.id == 0L) {
-                it.id = addNote.execute(it)
-            } else {
-                updateNote.execute(it)
+            launch {
+                saveNote.execute(it)
+                notesRouter.returnBack()
             }
         }
-    }
 
-    fun onReturnBack() {
-        launch {
-            saveNote()
-            notesRouter.returnBack()
-        }
     }
 
     fun onImageSelected(url: String) = imageViewer.showImage(url)

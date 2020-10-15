@@ -1,8 +1,7 @@
 package com.brainbowfx.android.freenotes.di.module
 
 import com.brainbowfx.android.freenotes.domain.interactor.CreateImageFile
-import com.brainbowfx.android.freenotes.domain.mappers.Mapper
-import com.brainbowfx.android.freenotes.presentation.utils.PermissionManager
+import com.brainbowfx.android.freenotes.presentation.abstraction.PermissionManager
 import dagger.Module
 import dagger.Provides
 import org.mockito.Mockito

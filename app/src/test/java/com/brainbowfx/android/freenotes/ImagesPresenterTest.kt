@@ -8,10 +8,13 @@ import com.nhaarman.mockitokotlin2.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import org.junit.Test
+import org.junit.runner.RunWith
 
 import org.mockito.Mockito
+import org.mockito.junit.MockitoJUnitRunner
 import java.io.IOException
 
+@RunWith(MockitoJUnitRunner::class)
 class ImagesPresenterTest {
 
     private val imagesPresenter: ImagesPresenter = ImagesPresenter()
@@ -20,7 +23,6 @@ class ImagesPresenterTest {
 
     init {
         DaggerTestComponentHolder.testComponent.inject(imagesPresenter)
-        Mockito.`when`(imagesPresenter.coroutineDispatchersProvider.getIODispatcher()).thenReturn(Dispatchers.Unconfined)
         Mockito.`when`(imagesPresenter.coroutineDispatchersProvider.getMainDispatcher()).thenReturn(Dispatchers.Unconfined)
         val viewState = Mockito.mock(`ImagesView$$State`::class.java)
         imagesPresenter.setViewState(viewState)

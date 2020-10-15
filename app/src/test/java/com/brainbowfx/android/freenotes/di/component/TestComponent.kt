@@ -1,10 +1,9 @@
 package com.brainbowfx.android.freenotes.di.component
 
 import com.brainbowfx.android.freenotes.CreateImageFileTest
-import com.brainbowfx.android.freenotes.di.module.TestCreateImageFileModule
-import com.brainbowfx.android.freenotes.di.module.TestDispatchersModule
-import com.brainbowfx.android.freenotes.di.module.TestImagesPresenterModule
-import com.brainbowfx.android.freenotes.di.module.TestNotePresenterModule
+import com.brainbowfx.android.freenotes.DeleteImagesTest
+import com.brainbowfx.android.freenotes.SaveNoteTest
+import com.brainbowfx.android.freenotes.di.module.*
 import com.brainbowfx.android.freenotes.domain.interactor.CreateImageFile
 import com.brainbowfx.android.freenotes.presentation.presenter.ImagesPresenter
 import com.brainbowfx.android.freenotes.presentation.presenter.NotePresenter
@@ -17,7 +16,8 @@ import javax.inject.Singleton
         TestImagesPresenterModule::class,
         TestDispatchersModule::class,
         TestNotePresenterModule::class,
-        TestCreateImageFileModule::class
+        TestImagesModule::class,
+        TestNotesModule::class
     ]
 )
 interface TestComponent {
@@ -25,4 +25,6 @@ interface TestComponent {
     fun inject(notePresenter: NotePresenter)
     fun inject(createImageFileTest: CreateImageFileTest)
     fun inject(createImageFile: CreateImageFile)
+    fun inject(deleteImagesTest: DeleteImagesTest)
+    fun inject(saveNoteTest: SaveNoteTest)
 }

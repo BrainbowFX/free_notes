@@ -7,13 +7,15 @@ import com.nhaarman.mockitokotlin2.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Before
 import org.junit.Test
+import org.junit.runner.RunWith
 import org.mockito.Mockito
+import org.mockito.junit.MockitoJUnitRunner
 
+@RunWith(MockitoJUnitRunner::class)
 class NotePresenterTest {
 
     private val notePresenter = NotePresenter(-1L, false)
 
-    @ExperimentalCoroutinesApi
     @Before
     fun setup() {
         DaggerTestComponentHolder.testComponent.inject(notePresenter)
