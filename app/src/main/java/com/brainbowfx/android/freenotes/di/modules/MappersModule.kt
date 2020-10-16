@@ -20,11 +20,6 @@ class MappersModule {
 
     @Provides
     @Presenter
-    fun provideNotesToNotesEntityMapper(@Named(DATETIME_NAMED_ID) simpleDateFormat: SimpleDateFormat): Mapper<Note, NoteEntity> =
-        NotesToNotesEntityMapper(simpleDateFormat)
-
-    @Provides
-    @Presenter
     fun provideImageToImageEntityMapper(): Mapper<Image, ImageEntity> = ImageToImageEntityMapper()
 
     @Provides
@@ -33,7 +28,23 @@ class MappersModule {
 
     @Provides
     @Presenter
-    fun provideNotesEntityToNotesMapper(@Named(DATETIME_NAMED_ID) simpleDateFormat: SimpleDateFormat, mapper: Mapper<ImageEntity, Image>): Mapper<NoteWithImages, Note> =
+    fun provideNotesToNoteWithImageMapper(
+        noteMapper: Mapper<Note, NoteEntity>,
+        imageMapper: Mapper<Image, ImageEntity>
+    ): Mapper<Note, NoteWithImages> =
+        NotesToNotesWithImagesMapper(noteMapper, imageMapper)
+
+    @Provides
+    @Presenter
+    fun provideNoteToNoteEntityMapper(@Named(DATETIME_NAMED_ID) simpleDateFormat: SimpleDateFormat): Mapper<Note, NoteEntity> =
+        NoteToNoteEntityMapper(simpleDateFormat)
+
+    @Provides
+    @Presenter
+    fun provideNotesEntityToNotesMapper(
+        @Named(DATETIME_NAMED_ID) simpleDateFormat: SimpleDateFormat,
+        mapper: Mapper<ImageEntity, Image>
+    ): Mapper<NoteWithImages, Note> =
         NotesWithImagesToNotesMapper(simpleDateFormat, mapper)
 
     @Provides

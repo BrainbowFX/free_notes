@@ -15,58 +15,42 @@ import javax.inject.Inject
 
 @Presenter
 class NotesRepositoryImpl @Inject constructor(
-    private val forwardMapper: Mapper<Note, NoteEntity>,
-    private val backwardMapper: Mapper<NoteWithImages, Note>,
-    private val imagesForwardMapper: Mapper<Image, ImageEntity>,
     private val notesDao: NotesDao,
     private val imagesDao: ImagesDao,
     private val applicationDatabase: ApplicationDatabase
 ) : NotesRepository {
 
-    override suspend fun get(id: Long): Note {
-        val notesWithImages = notesDao.getNoteWithImages(id)
-        return backwardMapper.map(notesWithImages)
+    override suspend fun get(id: Long): NoteWithImages? = notesDao.getNoteWithImages(id)
+
+    override suspend fun delete(item: NoteEntity) {
+        notesDao.delete(item)
     }
 
-    override suspend fun delete(item: Note) {
-        val noteEntity = forwardMapper.map(item)
-        notesDao.delete(noteEntity)
-    }
-
-    override suspend fun delete(items: List<Note>) {
+    override suspend fun delete(items: List<NoteEntity>) {
         val itemsIds = items.map { it.id }.toLongArray()
         notesDao.delete(itemsIds)
     }
 
-    override suspend fun update(item: Note) = applicationDatabase.withTransaction {
-        notesDao.update(forwardMapper.map(item))
-        if (item.images.isEmpty()) return@withTransaction
-        val imagesIds: MutableList<Long> = mutableListOf()
-        val images = item.images.map {
-            imagesIds.add(it.id)
-            it.noteId = item.id
-            imagesForwardMapper.map(it)
-        }
-        imagesDao.insert(images)
+    override suspend fun update(item: NoteWithImages) = applicationDatabase.withTransaction {
+        notesDao.update(item.noteEntity)
+        saveImages(item.images, item.noteEntity.id)
     }
 
-    override suspend fun getAll(recycled: Boolean): List<Note> =
-        notesDao.getNoteWithImages(recycled).map { backwardMapper.map(it) }
+    override suspend fun getAll(recycled: Boolean): List<NoteWithImages> =
+        notesDao.getNoteWithImages(recycled)
 
 
-    override suspend fun add(item: Note): Long = applicationDatabase.withTransaction {
-        val note = forwardMapper.map(item)
-        val noteId = notesDao.insert(note)
-        val images = item.images
-            .map {
-                it.noteId = noteId
-                imagesForwardMapper.map(it)
-            }
+    override suspend fun add(item: NoteWithImages): Long = applicationDatabase.withTransaction {
+        val noteId = notesDao.insert(item.noteEntity)
+        saveImages(item.images, noteId)
+        noteId
+    }
 
+    private suspend fun saveImages(images: List<ImageEntity>, noteId: Long) {
         if (images.isNotEmpty()) {
+            images.forEach { it.noteId = noteId }
             imagesDao.insert(images)
         }
-        noteId
     }
 
 }

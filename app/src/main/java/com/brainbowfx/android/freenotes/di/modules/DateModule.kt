@@ -21,10 +21,10 @@ class DateModule {
     @Presenter
     @Provides
     @Named(TIMESTAMP_NAMED_ID)
-    fun provideTimeStampSimpeDateFormat(locale: Locale): SimpleDateFormat = SimpleDateFormat(TIMESTAMP, locale)
+    fun provideTimeStampSimpleDateFormat(locale: Locale): SimpleDateFormat = SimpleDateFormat(TIMESTAMP, locale)
 
     @Presenter
     @Provides
     @Named(DATETIME_NAMED_ID)
-    fun provideDateTimeSimpeDateFormat(locale: Locale): SimpleDateFormat = SimpleDateFormat(DATETIME, locale)
+    fun provideDateTimeSimpleDateFormat(locale: Locale): SimpleDateFormat = SimpleDateFormat(DATETIME, locale)
 }

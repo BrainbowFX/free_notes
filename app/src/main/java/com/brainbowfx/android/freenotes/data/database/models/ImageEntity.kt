@@ -20,6 +20,8 @@ data class ImageEntity(
     @ColumnInfo(name = "image_id")
     val imageId: String,
     @ColumnInfo(name = "note_id")
-    val noteId: Long,
+    var noteId: Long,
     val url: String
-) : BaseEntity
+) : BaseEntity {
+
+}

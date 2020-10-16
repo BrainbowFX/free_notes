@@ -45,7 +45,7 @@ class NotePresenter(private val argId: Long?, private val argDuplicate: Boolean?
             note = Note(dateTime = simpleDateFormat.format(Date()))
         } else {
             launch {
-                note = getNote.execute(argId).also(this@NotePresenter::initViewFields)
+                note = getNote.execute(argId)?.also(this@NotePresenter::initViewFields)
                 if (argDuplicate == true) {
                     note?.id = 0
                 }
