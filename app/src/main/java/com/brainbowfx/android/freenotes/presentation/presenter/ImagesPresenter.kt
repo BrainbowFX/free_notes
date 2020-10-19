@@ -22,9 +22,6 @@ class ImagesPresenter : ScopedPresenter<ImagesView>() {
     @Inject
     lateinit var permissionManager: PermissionManager
 
-    @Inject
-    lateinit var deleteImages: DeleteImages
-
     fun onCameraButtonClicked() {
         permissionManager.checkPermission(PERMISSION_WRITE_EXTERNAL_STORAGE,
             {
@@ -39,13 +36,6 @@ class ImagesPresenter : ScopedPresenter<ImagesView>() {
             },
             { viewState.showWriteExternalStoragePermissionDenied() }
         )
-    }
-
-    fun onDeleteImages(images: List<Image>) {
-        launch {
-            deleteImages.execute(images)
-            viewState.deleteImages(images)
-        }
     }
 
     fun onCameraExists(url: String) {

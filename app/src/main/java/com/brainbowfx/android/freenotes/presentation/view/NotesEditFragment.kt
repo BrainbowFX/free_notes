@@ -136,7 +136,7 @@ class NotesEditFragment : MvpAppCompatFragment(), SpeechView, NotesEditView, Ima
         ibDeleteImage.setOnClickListener {
             if (tracker.selection != null && !tracker.selection.isEmpty) {
                 val images = imagesListAdapter.getItemsById(tracker.selection.toList())
-                imagesPresenter.onDeleteImages(images)
+                notePresenter.onImagesRemoved(images)
             }
         }
 
@@ -224,7 +224,7 @@ class NotesEditFragment : MvpAppCompatFragment(), SpeechView, NotesEditView, Ima
         Toast.makeText(context, error, Toast.LENGTH_LONG).show()
     }
 
-    override fun placeTextAtCursorPositon(text: String) {
+    override fun placeTextAtCursorPosition(text: String) {
         tietInputText.text?.insert(tietInputText.selectionStart, text)
     }
 
@@ -236,11 +236,6 @@ class NotesEditFragment : MvpAppCompatFragment(), SpeechView, NotesEditView, Ima
     //ImagesView implementation methods
     override fun setImage(image: Image) {
         notePresenter.onImageAdded(image)
-        tracker.clearSelection()
-    }
-
-    override fun deleteImages(images: List<Image>) {
-        notePresenter.onImagesRemoved(images)
         tracker.clearSelection()
     }
 

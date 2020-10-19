@@ -29,7 +29,4 @@ interface ImagesView : MvpView {
 
     @StateStrategyType(SkipStrategy::class)
     fun checkCameraExistence(url: String)
-
-    @StateStrategyType(OneExecutionStateStrategy::class)
-    fun deleteImages(images: List<Image>)
 }

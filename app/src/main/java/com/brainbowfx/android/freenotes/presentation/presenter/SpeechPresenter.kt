@@ -47,7 +47,7 @@ class SpeechPresenter : MvpPresenter<SpeechView>(), SpeechRecognitionService.Spe
     }
 
     override fun onSpeechResult(recognizedSpeech: String) {
-        viewState.placeTextAtCursorPositon(recognizedSpeech)
+        viewState.placeTextAtCursorPosition(recognizedSpeech)
     }
 
 }

@@ -5,6 +5,7 @@ import com.brainbowfx.android.freenotes.DATETIME_NAMED_ID
 import com.brainbowfx.android.freenotes.domain.abstraction.ImageViewer
 import com.brainbowfx.android.freenotes.domain.entities.Image
 import com.brainbowfx.android.freenotes.domain.entities.Note
+import com.brainbowfx.android.freenotes.domain.interactor.DeleteImages
 import com.brainbowfx.android.freenotes.domain.interactor.SaveNote
 import com.brainbowfx.android.freenotes.domain.interactor.GetNote
 import com.brainbowfx.android.freenotes.domain.router.NotesRouter
@@ -32,6 +33,9 @@ class NotePresenter(private val argId: Long?, private val argDuplicate: Boolean?
 
     @Inject
     lateinit var notesRouter: NotesRouter
+
+    @Inject
+    lateinit var deleteImages: DeleteImages
 
     @field:[Inject Named(DATETIME_NAMED_ID)]
     lateinit var simpleDateFormat: SimpleDateFormat
@@ -77,9 +81,13 @@ class NotePresenter(private val argId: Long?, private val argDuplicate: Boolean?
     }
 
     fun onImagesRemoved(images: List<Image>) {
-        note?.images?.let {
-            it.removeAll(images)
-            viewState.setImages(ArrayList(it))
+        launch {
+            deleteImages.execute(images)
+            note?.images?.let {
+                it.removeAll(images)
+                viewState.setImages(ArrayList(it))
+                viewState.hideDeleteButton()
+            }
         }
     }
 
