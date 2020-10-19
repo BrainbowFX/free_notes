@@ -1,8 +1,7 @@
 package com.brainbowfx.android.freenotes.di.module
 
 import com.brainbowfx.android.freenotes.domain.interactor.CreateImageFile
-import com.brainbowfx.android.freenotes.domain.interactor.TakePhoto
-import com.brainbowfx.android.freenotes.presentation.utils.PermissionManager
+import com.brainbowfx.android.freenotes.presentation.abstraction.PermissionManager
 import dagger.Module
 import dagger.Provides
 import org.mockito.Mockito
@@ -14,8 +13,6 @@ class TestImagesPresenterModule {
     fun provideCreateImageFileMock(): CreateImageFile = Mockito.mock(CreateImageFile::class.java)
 
     @Provides
-    fun provideTakePhotoMock(): TakePhoto = Mockito.mock(TakePhoto::class.java)
-
-    @Provides
     fun providePermissionManagerMock(): PermissionManager = Mockito.mock(PermissionManager::class.java)
+
 }

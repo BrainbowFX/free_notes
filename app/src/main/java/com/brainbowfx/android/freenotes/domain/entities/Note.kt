@@ -1,8 +1,13 @@
 package com.brainbowfx.android.freenotes.domain.entities
 
-data class Note(var id: Long = -1,
-           var title: String = "",
-           var text: String = "",
-           var dateTime: String = "",
-           var imagePaths: MutableList<String> = mutableListOf()) {
+data class Note(
+    var id: Long = 0,
+    var title: String = "",
+    var text: String = "",
+    var dateTime: String = "",
+    var images: MutableList<Image> = mutableListOf()
+) {
+
+    val isEmpty: Boolean
+        get() = title.isEmpty() && text.isEmpty() && images.isEmpty()
 }

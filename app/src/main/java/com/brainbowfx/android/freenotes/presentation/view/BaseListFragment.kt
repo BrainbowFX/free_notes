@@ -13,13 +13,12 @@ import com.brainbowfx.android.freenotes.presentation.utils.NotesItemAnimator
 import com.brainbowfx.android.freenotes.presentation.view.contract.NotesListView
 import javax.inject.Inject
 
-open class BaseListFragment : MvpAppCompatFragment(), NotesListView {
+abstract class BaseListFragment : MvpAppCompatFragment(), NotesListView {
 
     @Inject
     lateinit var notesListAdapter: NotesListAdapter
 
     lateinit var rvNotesList: RecyclerView
-
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val root = inflater.inflate(R.layout.fragment_notes_list, container, false)
@@ -31,11 +30,9 @@ open class BaseListFragment : MvpAppCompatFragment(), NotesListView {
         return root
     }
 
-    override fun setData(data: MutableList<Note>) {
+    override fun setData(data: List<Note>) {
         notesListAdapter.setData(data)
     }
 
-    override fun removeNoteAt(position: Int) {
-        notesListAdapter.removeAt(position)
-    }
+    abstract override fun setupButton()
 }

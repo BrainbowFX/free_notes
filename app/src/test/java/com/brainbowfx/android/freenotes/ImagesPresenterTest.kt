@@ -8,20 +8,21 @@ import com.nhaarman.mockitokotlin2.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import org.junit.Test
+import org.junit.runner.RunWith
 
-import org.junit.Before
 import org.mockito.Mockito
+import org.mockito.junit.MockitoJUnitRunner
 import java.io.IOException
 
+@RunWith(MockitoJUnitRunner::class)
 class ImagesPresenterTest {
 
     private val imagesPresenter: ImagesPresenter = ImagesPresenter()
     private val argumentCaptor = argumentCaptor<((String)-> Unit)>()
 
-    @Before
-    fun setUp() {
+
+    init {
         DaggerTestComponentHolder.testComponent.inject(imagesPresenter)
-        Mockito.`when`(imagesPresenter.coroutineDispatchersProvider.getIODispatcher()).thenReturn(Dispatchers.Unconfined)
         Mockito.`when`(imagesPresenter.coroutineDispatchersProvider.getMainDispatcher()).thenReturn(Dispatchers.Unconfined)
         val viewState = Mockito.mock(`ImagesView$$State`::class.java)
         imagesPresenter.setViewState(viewState)
@@ -40,47 +41,41 @@ class ImagesPresenterTest {
     }
 
     @Test
-    fun `test onCameraButtonClicked when called callback onPermissionGranted and createImageFile returns valid url should call viewState's setImage`() {
-        val testUrl = "testUrl"
+    fun `test onCameraButtonClicked when permission denied, should call show showWriteExternalStoragePermissionDenied`() {
 
-        runBlocking {
-            Mockito.`when`(imagesPresenter.createImageFile.execute(Unit)).thenReturn(testUrl)
-            Mockito.`when`(imagesPresenter.takePhoto.execute(testUrl)).thenReturn(true)
-        }
+        captureThirdArg().invoke(PERMISSION_WRITE_EXTERNAL_STORAGE)
 
-        captureSecondArg().invoke(PERMISSION_WRITE_EXTERNAL_STORAGE)
-        verify(imagesPresenter.viewState).setImage(testUrl)
+        verify(imagesPresenter.viewState).showWriteExternalStoragePermissionDenied()
     }
 
     @Test
-    fun `test onCameraButtonClicked when called callback onPermissionGranted and createImageFile throws ioException should call viewState's showTakePhotoFailureError`() {
+    fun `test onCameraButtonClicked when called callback onPermissionGranted and createImageFile throws ioException should call viewState's showCreateTempFileFailureError`() {
 
         runBlocking {
             doThrow(IOException::class).`when`(imagesPresenter.createImageFile).execute(Unit)
         }
         captureSecondArg().invoke(PERMISSION_WRITE_EXTERNAL_STORAGE)
 
-        verify(imagesPresenter.viewState).showTakePhotoFailureError()
+        verify(imagesPresenter.viewState).showCreateTempFileFailureError()
     }
 
     @Test
-    fun `test onCameraButtonClicked when called callback onPermissionGranted and createImageFile returns valid url but takePhoto's execute returns false should call viewState's showTakePhotoFailureError`() {
+    fun `test onCameraButtonClicked when called callback onPermissionGranted and createImageFile returns valid url should call ImagesView checkCameraExistence method`() {
         val testUrl = "testUrl"
 
         runBlocking {
             Mockito.`when`(imagesPresenter.createImageFile.execute(Unit)).thenReturn(testUrl)
-            Mockito.`when`(imagesPresenter.takePhoto.execute(testUrl)).thenReturn(false)
         }
 
         captureSecondArg().invoke(PERMISSION_WRITE_EXTERNAL_STORAGE)
 
-        verify(imagesPresenter.viewState).showTakePhotoFailureError()
+        verify(imagesPresenter.viewState).checkCameraExistence(testUrl)
     }
 
     @Test
     fun `test onCameraButtonClicked when called callback onPermissionDenied should call viewState's showWriteExternaStoragePermissionDenied`() {
         captureThirdArg().invoke(PERMISSION_WRITE_EXTERNAL_STORAGE)
-        verify(imagesPresenter.viewState).showWriteExternaStoragePermissionDenied()
+        verify(imagesPresenter.viewState).showWriteExternalStoragePermissionDenied()
     }
 
 }

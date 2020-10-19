@@ -25,11 +25,13 @@
             app:backgroundTint="@color/colorPrimary"
             app:hideOnScroll="true"
             app:layout_scrollFlags="scroll|enterAlways"
+            app:fabAnimationMode="slide"
             app:fabAlignmentMode="center">
 
     </com.google.android.material.bottomappbar.BottomAppBar>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
+            style="@style/FabButtonStyle"
             app:maxImageSize="@dimen/standart_icon_size"
             app:layout_anchor="@+id/bottomAppBar"
             android:layout_width="wrap_content"

@@ -4,41 +4,39 @@ import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.recyclerview.selection.ItemDetailsLookup
 import androidx.recyclerview.selection.SelectionTracker
-import androidx.recyclerview.widget.RecyclerView
 import com.brainbowfx.android.freenotes.R
+import com.brainbowfx.android.freenotes.domain.entities.Image
 import com.brainbowfx.android.freenotes.domain.mappers.Mapper
+import com.brainbowfx.android.freenotes.presentation.utils.ImagesDiffCallback
 import com.bumptech.glide.Glide
+import kotlinx.android.synthetic.main.item_images_list.view.*
 import javax.inject.Inject
 
 class ImagesListAdapter @Inject constructor(
     private val layoutInflater: LayoutInflater,
-    private val urlToUriMapper: Mapper<String, Uri>
+    private val urlToUriMapper: Mapper<String, Uri>,
+    imagesDiffCallback: ImagesDiffCallback
 ) :
-    RecyclerView.Adapter<ImagesListAdapter.ViewHolder>() {
+    BaseAdapter<Image, ImagesListAdapter.ViewHolder>(imagesDiffCallback) {
 
-    private var imagesPaths: MutableList<String> = mutableListOf()
-    private var listener: ((position: Int) -> Unit)? = null
+    private var listener: AdapterListener? = null
+
     private var tracker: SelectionTracker<Long>? = null
 
     init {
         setHasStableIds(true)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ImagesListAdapter.ViewHolder =
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
         ViewHolder(layoutInflater.inflate(R.layout.item_images_list, parent, false), urlToUriMapper)
-
-    override fun getItemCount(): Int = imagesPaths.size
-
-    fun getItem(position: Int) = imagesPaths[position]
 
     fun setTracker(tracker: SelectionTracker<Long>) {
         this.tracker = tracker
     }
 
-    fun setListener(listener: ((position: Int) -> Unit)?) {
+    fun setListener(listener: AdapterListener) {
         this.listener = listener
     }
 
@@ -46,35 +44,22 @@ class ImagesListAdapter @Inject constructor(
         listener = null
     }
 
+    fun getItemsById(ids: List<Long>): List<Image> =
+        getItems().filterIndexed { index, _ -> index.toLong() in ids }
+
     override fun getItemId(position: Int): Long = position.toLong()
 
-    fun remove(ids: List<Long>) {
-        val values = ids.map { imagesPaths[it.toInt()] }
-        imagesPaths.removeAll(values)
-        notifyDataSetChanged()
-    }
 
-    fun addItem(imagePath: String) {
-        imagesPaths.add(imagePath)
-        notifyItemInserted(imagesPaths.size - 1)
-    }
-
-    fun setData(imagesPaths: MutableList<String>) {
-        this.imagesPaths = imagesPaths
-        notifyDataSetChanged()
-    }
-
-    fun getItems(): MutableList<String> = imagesPaths
-
-    override fun onBindViewHolder(holder: ImagesListAdapter.ViewHolder, position: Int) {
-        val imagePath = imagesPaths[position]
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        val imagePath = getItem(position)
         tracker?.let { holder.bind(imagePath, it.isSelected(position.toLong())) }
-        holder.root.setOnClickListener { listener?.invoke(holder.layoutPosition) }
+        holder.itemView.setOnClickListener { listener?.onItemClicked(holder.layoutPosition) }
     }
 
-    class ViewHolder(val root: View, val urlToUriMapper: Mapper<String, Uri>) : RecyclerView.ViewHolder(root) {
-        val arivNoteImage = root.findViewById<ImageView>(R.id.arivNoteImage)
-        val ivImageCheckedIndicator = root.findViewById<ImageView>(R.id.ivImageCheckedIndicator)
+    class ViewHolder(
+        itemView: View,
+        private val urlToUriMapper: Mapper<String, Uri>
+    ) : BaseAdapter.ViewHolder<Image>(itemView) {
 
         fun getItemDetails(): ItemDetailsLookup.ItemDetails<Long> =
             object : ItemDetailsLookup.ItemDetails<Long>() {
@@ -84,10 +69,24 @@ class ImagesListAdapter @Inject constructor(
 
         fun getId(): Long = adapterPosition.toLong()
 
-        fun bind(imagePath: String, isActivated: Boolean = false) {
-            Glide.with(root.context).load(urlToUriMapper.map(imagePath)).into(arivNoteImage)
+        fun bind(item: Image, isActivated: Boolean = false) {
             itemView.isActivated = isActivated
-            ivImageCheckedIndicator.visibility = if (isActivated) View.VISIBLE else View.INVISIBLE
+            itemView.ivImageCheckedIndicator.visibility =
+                if (isActivated) View.VISIBLE else View.INVISIBLE
+            onBind(item)
+        }
+
+        override fun onBind(item: Image) {
+            val imageSize = itemView.context.resources.getDimension(R.dimen.notes_image_size).toInt()
+            Glide.with(itemView.context)
+                .load(urlToUriMapper.map(item.url))
+                .placeholder(R.drawable.ic_image)
+                .override(imageSize, imageSize)
+                .into(itemView.arivNoteImage)
+        }
+
+        override fun unBind() {
+            itemView.arivNoteImage.setImageDrawable(null)
         }
     }
 }

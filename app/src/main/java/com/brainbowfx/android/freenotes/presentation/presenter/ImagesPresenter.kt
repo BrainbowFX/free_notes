@@ -1,54 +1,58 @@
 package com.brainbowfx.android.freenotes.presentation.presenter
 
 import com.arellomobile.mvp.InjectViewState
-import com.arellomobile.mvp.MvpPresenter
 import com.brainbowfx.android.freenotes.domain.CoroutineDispatchersProvider
+import com.brainbowfx.android.freenotes.domain.entities.Image
 import com.brainbowfx.android.freenotes.domain.interactor.CreateImageFile
-import com.brainbowfx.android.freenotes.domain.interactor.TakePhoto
+import com.brainbowfx.android.freenotes.domain.interactor.DeleteImages
 import com.brainbowfx.android.freenotes.presentation.PERMISSION_WRITE_EXTERNAL_STORAGE
-import com.brainbowfx.android.freenotes.presentation.utils.PermissionManager
+import com.brainbowfx.android.freenotes.presentation.abstraction.PermissionManager
 import com.brainbowfx.android.freenotes.presentation.view.contract.ImagesView
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import java.io.IOException
 import javax.inject.Inject
+import kotlin.coroutines.CoroutineContext
 
 @InjectViewState
-class ImagesPresenter : MvpPresenter<ImagesView>() {
+class ImagesPresenter : ScopedPresenter<ImagesView>() {
 
     @Inject
     lateinit var createImageFile: CreateImageFile
 
     @Inject
-    lateinit var takePhoto: TakePhoto
-
-    @Inject
     lateinit var permissionManager: PermissionManager
-
-    @Inject
-    lateinit var coroutineDispatchersProvider: CoroutineDispatchersProvider
 
     fun onCameraButtonClicked() {
         permissionManager.checkPermission(PERMISSION_WRITE_EXTERNAL_STORAGE,
             {
-                GlobalScope.launch(coroutineDispatchersProvider.getMainDispatcher()) {
-                    val url: String = createImageFile()
-                    val isPhotoTaked: Boolean = takePhoto(url)
-                    if (isPhotoTaked) viewState.setImage(url)
-                    else viewState.showTakePhotoFailureError()
+                launch {
+                    try {
+                        createImageFile.execute(Unit)
+                    } catch (ioException: IOException) {
+                        viewState.showCreateTempFileFailureError()
+                        null
+                    }?.let(viewState::checkCameraExistence)
                 }
             },
-            { viewState.showWriteExternaStoragePermissionDenied() }
+            { viewState.showWriteExternalStoragePermissionDenied() }
         )
     }
 
-    private suspend fun takePhoto(url: String): Boolean = if (url.isNotEmpty()) takePhoto.execute(url) else false
+    fun onCameraExists(url: String) {
+        viewState.takePhoto(url)
+    }
 
-    private suspend fun createImageFile(): String = try {
-        withContext(coroutineDispatchersProvider.getIODispatcher()) { createImageFile.execute(Unit) }
-    } catch (ioException: IOException) {
-        ""
+    fun onCameraNotExists() {
+        viewState.showNoCameraMessage()
+    }
+
+    fun onPhotoTaken(url: String) {
+        viewState.setImage(Image(url = url))
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        coroutineContext[Job]?.cancel()
     }
 
 

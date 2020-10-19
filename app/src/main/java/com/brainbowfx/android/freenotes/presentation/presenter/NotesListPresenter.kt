@@ -1,20 +1,17 @@
 package com.brainbowfx.android.freenotes.presentation.presenter
 
 import com.arellomobile.mvp.InjectViewState
-import com.arellomobile.mvp.MvpPresenter
 import com.brainbowfx.android.freenotes.domain.CoroutineDispatchersProvider
 import com.brainbowfx.android.freenotes.domain.entities.Note
 import com.brainbowfx.android.freenotes.domain.interactor.DeleteNote
 import com.brainbowfx.android.freenotes.domain.interactor.GetNotesList
-import com.brainbowfx.android.freenotes.domain.router.NotesEditRouter
+import com.brainbowfx.android.freenotes.domain.router.NotesRouter
 import com.brainbowfx.android.freenotes.presentation.view.contract.NotesListView
 import kotlinx.coroutines.*
 import javax.inject.Inject
 
 @InjectViewState
-class NotesListPresenter : MvpPresenter<NotesListView>() {
-
-    private var job: Job? = null
+class NotesListPresenter : ScopedPresenter<NotesListView>() {
 
     @Inject
     lateinit var getNotesList: GetNotesList
@@ -23,36 +20,42 @@ class NotesListPresenter : MvpPresenter<NotesListView>() {
     lateinit var deleteNote: DeleteNote
 
     @Inject
-    lateinit var dispatchersProvider: CoroutineDispatchersProvider
+    lateinit var notesRouter: NotesRouter
 
-    @Inject
-    lateinit var notesEditRouter: NotesEditRouter
+    override fun onFirstViewAttach() {
+        super.onFirstViewAttach()
+        viewState.setupButton()
+    }
 
     fun start() {
-        job = GlobalScope.launch(dispatchersProvider.getMainDispatcher()) {
-            val result = withContext(dispatchersProvider.getIODispatcher()) { getNotesList.execute(Unit) }
+        launch {
+            val result = getNotesList.execute(false)
             viewState.setData(result.toMutableList())
         }
     }
 
     override fun onDestroy() {
-        job?.cancel()
+        coroutineContext[Job]?.cancel()
         super.onDestroy()
     }
 
     fun onNoteSelected(note: Note) {
-        notesEditRouter.navigateNext(note.id)
+        notesRouter.navigateNext(note.id)
     }
 
     fun onNoteDeleted(note: Note, position: Int) {
-        job = GlobalScope.launch(dispatchersProvider.getMainDispatcher()) {
-            withContext(dispatchersProvider.getIODispatcher()) { deleteNote.execute(note) }
+        launch {
+            deleteNote.execute(note)
             viewState.removeNoteAt(position)
         }
     }
 
     fun onNoteDuplicated(note: Note) {
-        notesEditRouter.navigateNext(note.id, true)
+        notesRouter.navigateNext(note.id, true)
+    }
+
+    fun onFloatingButtonClick() {
+        notesRouter.navigateNext()
     }
 
 

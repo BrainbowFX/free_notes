@@ -1,18 +1,19 @@
 package com.brainbowfx.android.freenotes.domain.repository
 
-import com.brainbowfx.android.freenotes.domain.entities.Note
+import com.brainbowfx.android.freenotes.data.database.models.NoteEntity
+import com.brainbowfx.android.freenotes.data.database.models.projections.NoteWithImages
 
 interface NotesRepository {
 
-    fun add(item: Note): Long
+    suspend fun add(item: NoteWithImages): Long
 
-    fun delete(item: Note)
+    suspend fun delete(item: NoteEntity)
 
-    fun delete(items: List<Note>)
+    suspend fun delete(items: List<NoteEntity>): Int
 
-    fun update(item: Note)
+    suspend fun update(item: NoteWithImages)
 
-    fun get(id: Long): Note
+    suspend fun get(id: Long): NoteWithImages?
 
-    fun getAll(): List<Note>
+    suspend fun getAll(recycled: Boolean): List<NoteWithImages>
 }

@@ -4,7 +4,7 @@ import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
 import com.brainbowfx.android.freenotes.data.speech.SpeechRecognitionService
 import com.brainbowfx.android.freenotes.presentation.PERMISSION_RECORD_AUDIO
-import com.brainbowfx.android.freenotes.presentation.utils.PermissionManager
+import com.brainbowfx.android.freenotes.presentation.abstraction.PermissionManager
 import com.brainbowfx.android.freenotes.presentation.view.contract.SpeechView
 import javax.inject.Inject
 
@@ -47,7 +47,7 @@ class SpeechPresenter : MvpPresenter<SpeechView>(), SpeechRecognitionService.Spe
     }
 
     override fun onSpeechResult(recognizedSpeech: String) {
-        viewState.placeTextAtCursorPositon(recognizedSpeech)
+        viewState.placeTextAtCursorPosition(recognizedSpeech)
     }
 
 }

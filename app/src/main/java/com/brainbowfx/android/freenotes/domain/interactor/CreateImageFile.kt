@@ -1,19 +1,23 @@
 package com.brainbowfx.android.freenotes.domain.interactor
 
+import com.brainbowfx.android.freenotes.domain.CoroutineDispatchersProvider
 import com.brainbowfx.android.freenotes.domain.abstraction.FileUriProvider
-import com.brainbowfx.android.freenotes.domain.abstraction.ImageFileGenerator
+import com.brainbowfx.android.freenotes.domain.abstraction.ImageFileManager
+import kotlinx.coroutines.withContext
 import java.io.IOException
 import javax.inject.Inject
 
 class CreateImageFile @Inject constructor(
-    private val imageFileGenerator: ImageFileGenerator,
-    private val fileUriProvider: FileUriProvider
-) : UseCase<Unit, String>() {
+    private val imageFileManager: ImageFileManager,
+    private val fileUriProvider: FileUriProvider,
+    private val coroutineDispatchersProvider: CoroutineDispatchersProvider
+) : UseCase<Unit, String?>() {
 
     @Throws(IOException::class)
-    override suspend fun execute(params: Unit): String {
-        val file = imageFileGenerator.generateImageFile()
-        return if (file != null) fileUriProvider.getUriForFile(file) else ""
-    }
-
+    override suspend fun execute(params: Unit): String? =
+        withContext(coroutineDispatchersProvider.getIODispatcher()) {
+            imageFileManager.addImageFile()?.let {
+                fileUriProvider.getUriForFile(it)
+            }
+        }
 }

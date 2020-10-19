@@ -1,118 +1,95 @@
 package com.brainbowfx.android.freenotes.presentation.view
 
-import android.app.Activity
 import android.content.Intent
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
-import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
-import android.provider.MediaStore
+import android.view.MenuItem
 import android.view.View
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.arellomobile.mvp.MvpAppCompatActivity
+import com.brainbowfx.android.freenotes.PREF_DARK_THEME
 import com.brainbowfx.android.freenotes.R
-import com.brainbowfx.android.freenotes.domain.CoroutineDispatchersProvider
-import com.brainbowfx.android.freenotes.domain.abstraction.CameraController
 import com.brainbowfx.android.freenotes.domain.abstraction.ImageViewer
 import com.brainbowfx.android.freenotes.domain.mappers.Mapper
-import com.brainbowfx.android.freenotes.domain.router.NotesEditRouter
+import com.brainbowfx.android.freenotes.domain.router.NotesRouter
 import com.brainbowfx.android.freenotes.presentation.App
-import com.brainbowfx.android.freenotes.presentation.utils.PermissionManager
+import com.brainbowfx.android.freenotes.presentation.abstraction.FloatingActionButtonOwner
+import com.brainbowfx.android.freenotes.presentation.abstraction.PermissionManager
 import com.google.android.material.bottomappbar.BottomAppBar
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import kotlinx.coroutines.*
 import javax.inject.Inject
 
-class MainActivity : MvpAppCompatActivity(), PermissionManager, CameraController, ImageViewer {
+class MainActivity : MvpAppCompatActivity(), PermissionManager, ImageViewer, FloatingActionButtonOwner {
 
-    private val REQUEST_PERMISSION_CODE = 1
-    private val REQUEST_TAKE_PHOTO_CODE = 2
-
-    override var onCameraResult: ((success: Boolean) -> Unit)? = null
+    companion object {
+        private const val REQUEST_PERMISSION_CODE = 1
+    }
 
     override var grantedPermissionsCallbacks: MutableMap<String, (String) -> Unit> = mutableMapOf()
     override var deniedPermissionsCallbacks: MutableMap<String, (String) -> Unit> = mutableMapOf()
 
-    private var isSaveInstanceStateCalled = false
-
     private lateinit var bottomAppBar: BottomAppBar
     private lateinit var floatingActionButton: FloatingActionButton
-
-    private var iconBack: Drawable? = null
-    private var iconAdd: Drawable? = null
-
-    private var addNoteClickListener = View.OnClickListener { notesEditRouter.navigateNext() }
-    private var returnBackClickListener = View.OnClickListener { notesEditRouter.returnBack() }
-
-    @Inject
-    lateinit var notesEditRouter: NotesEditRouter
 
     @Inject
     lateinit var urlToUriMapper: Mapper<String, Uri>
 
     @Inject
-    lateinit var dispatchersProvider: CoroutineDispatchersProvider
+    lateinit var preferences: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        App.Instance.plusActivitySubcomponent()
-        App.Instance.plusActivityPerInstanceSubcomponent(this)?.inject(this)
+        App.Instance.activitySubComponent?.inject(this)
 
-        iconBack = ContextCompat.getDrawable(this, R.drawable.ic_arrow_back)
-        iconAdd = ContextCompat.getDrawable(this, R.drawable.ic_add)
-
-        bottomAppBar = findViewById(R.id.bottomAppBar)
         floatingActionButton = findViewById(R.id.floatingActionButton)
+        setupBottomNavBar()
+    }
 
-        floatingActionButton.setOnClickListener(addNoteClickListener)
-
-        notesEditRouter.addCallback {
-            when (it) {
-                R.id.notesListFragment -> setFabButtonStateAdd()
-                R.id.notesEditFragment -> setFabButtonStateBack()
+    private fun setupBottomNavBar() {
+        bottomAppBar = findViewById(R.id.bottomAppBar)
+        bottomAppBar.menu
+            .add("")
+            .setIcon(
+                if (preferences.getInt(
+                        PREF_DARK_THEME,
+                        AppCompatDelegate.MODE_NIGHT_NO
+                    ) == AppCompatDelegate.MODE_NIGHT_NO
+                ) {
+                    R.drawable.ic_day
+                } else {
+                    R.drawable.ic_night
+                }
+            )
+            .setOnMenuItemClickListener {
+                switchTheme()
+                true
             }
+            .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
+    }
+
+    private fun switchTheme() {
+        val iconWithTheme = if (preferences.getInt(
+                PREF_DARK_THEME,
+                AppCompatDelegate.MODE_NIGHT_NO
+            ) == AppCompatDelegate.MODE_NIGHT_NO
+        ) {
+            AppCompatDelegate.MODE_NIGHT_YES
+        } else {
+            AppCompatDelegate.MODE_NIGHT_NO
         }
+
+        preferences.edit().putInt(PREF_DARK_THEME, iconWithTheme).apply()
+        window.setWindowAnimations(R.style.WindowAnimationTransition)
+        AppCompatDelegate.setDefaultNightMode(iconWithTheme)
     }
 
-    private fun setFabButtonStateAdd() {
-        runWithDelay(120) { bottomAppBar.fabAlignmentMode = BottomAppBar.FAB_ALIGNMENT_MODE_CENTER }
-        floatingActionButton.setOnClickListener(addNoteClickListener)
-        floatingActionButton.setImageDrawable(iconAdd)
-    }
-
-    private fun setFabButtonStateBack() {
-        runWithDelay(120) { bottomAppBar.fabAlignmentMode = BottomAppBar.FAB_ALIGNMENT_MODE_END }
-        floatingActionButton.setOnClickListener(returnBackClickListener)
-        floatingActionButton.setImageDrawable(iconBack)
-    }
-
-    private fun runWithDelay(delay: Long, run: () -> Unit) {
-        GlobalScope.launch(dispatchersProvider.getMainDispatcher()) {
-            delay(delay)
-            run()
-        }
-    }
-
-    override fun onBackPressed() {
-        if (!notesEditRouter.returnBack()) finish()
-    }
-
-    //Lifycycle methods
-    override fun onSaveInstanceState(outState: Bundle?) {
-        super.onSaveInstanceState(outState)
-        isSaveInstanceStateCalled = true
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        App.Instance.clearActivityPerInstanceSubcomponent()
-        if (!isSaveInstanceStateCalled) App.Instance.clearActivitySubcomponent()
-    }
-
-    //PermissionManager implementation methods
+    //PermissionManager implementation
     override fun checkPermission(
         permission: String,
         onPermissionGranted: (String) -> Unit,
@@ -121,14 +98,22 @@ class MainActivity : MvpAppCompatActivity(), PermissionManager, CameraController
         grantedPermissionsCallbacks[permission] = onPermissionGranted
         deniedPermissionsCallbacks[permission] = onPermissionDenied
 
-        if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(
+                this,
+                permission
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
             ActivityCompat.requestPermissions(this, arrayOf(permission), REQUEST_PERMISSION_CODE)
         } else {
             onPermissionGranted.invoke(permission)
         }
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == REQUEST_PERMISSION_CODE) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -141,28 +126,7 @@ class MainActivity : MvpAppCompatActivity(), PermissionManager, CameraController
         }
     }
 
-    //CameraController implementation methods
-    override fun takePhoto(url: String, onResult: ((success: Boolean) -> Unit)?) {
-        onCameraResult = onResult
-        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        intent.resolveActivity(packageManager)?.also {
-            intent.putExtra(MediaStore.EXTRA_OUTPUT, urlToUriMapper.map(url))
-            startActivityForResult(intent, REQUEST_TAKE_PHOTO_CODE)
-        }
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == REQUEST_TAKE_PHOTO_CODE) {
-            when (resultCode) {
-                Activity.RESULT_OK -> onCameraResult?.invoke(true)
-                Activity.RESULT_CANCELED -> onCameraResult?.invoke(false)
-                else -> onCameraResult?.invoke(false)
-            }
-        }
-    }
-
-    //ImageViewer implementation methods
+    //ImageViewer implementation
     override fun showImage(url: String) {
         val intent = Intent(Intent.ACTION_VIEW).also {
             it.setDataAndType(urlToUriMapper.map(url), "image/*")
@@ -171,5 +135,16 @@ class MainActivity : MvpAppCompatActivity(), PermissionManager, CameraController
         intent.resolveActivity(packageManager)?.let {
             startActivity(intent)
         }
+    }
+
+    //FloatingActionButtonOwner implementation
+    override fun setupButton(
+        drawableRes: Int,
+        fabAlignmentMode: Int,
+        onClickListener: View.OnClickListener
+    ) {
+        bottomAppBar.fabAlignmentMode = fabAlignmentMode
+        floatingActionButton.setOnClickListener(onClickListener)
+        floatingActionButton.setImageResource(drawableRes)
     }
 }
