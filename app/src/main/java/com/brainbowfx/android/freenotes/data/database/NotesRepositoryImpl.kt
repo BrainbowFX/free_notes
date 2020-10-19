@@ -26,9 +26,9 @@ class NotesRepositoryImpl @Inject constructor(
         notesDao.delete(item)
     }
 
-    override suspend fun delete(items: List<NoteEntity>) {
+    override suspend fun delete(items: List<NoteEntity>): Int {
         val itemsIds = items.map { it.id }.toLongArray()
-        notesDao.delete(itemsIds)
+        return notesDao.delete(itemsIds)
     }
 
     override suspend fun update(item: NoteWithImages) = applicationDatabase.withTransaction {

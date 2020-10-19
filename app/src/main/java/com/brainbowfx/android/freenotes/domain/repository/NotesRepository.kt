@@ -9,7 +9,7 @@ interface NotesRepository {
 
     suspend fun delete(item: NoteEntity)
 
-    suspend fun delete(items: List<NoteEntity>)
+    suspend fun delete(items: List<NoteEntity>): Int
 
     suspend fun update(item: NoteWithImages)
 
