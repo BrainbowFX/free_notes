@@ -23,7 +23,7 @@ class ImagesListAdapter @Inject constructor(
 
     private var listener: AdapterListener? = null
 
-    private var tracker: SelectionTracker<Long>? = null
+    private var tracker: SelectionTracker<String>? = null
 
     init {
         setHasStableIds(true)
@@ -32,7 +32,7 @@ class ImagesListAdapter @Inject constructor(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
         ViewHolder(layoutInflater.inflate(R.layout.item_images_list, parent, false), urlToUriMapper)
 
-    fun setTracker(tracker: SelectionTracker<Long>) {
+    fun setTracker(tracker: SelectionTracker<String>) {
         this.tracker = tracker
     }
 
@@ -44,15 +44,16 @@ class ImagesListAdapter @Inject constructor(
         listener = null
     }
 
-    fun getItemsById(ids: List<Long>): List<Image> =
-        getItems().filterIndexed { index, _ -> index.toLong() in ids }
+    fun getItemsById(ids: List<String>): List<Image> =
+        getItems().filter { it.imageId in ids }
 
-    override fun getItemId(position: Int): Long = position.toLong()
+    override fun getItemId(position: Int): Long = getItem(position).imageId.hashCode().toLong()
 
+    fun getPosition(imageId: String): Int = getItems().indexOfFirst { it.imageId == imageId }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val imagePath = getItem(position)
-        tracker?.let { holder.bind(imagePath, it.isSelected(position.toLong())) }
+        tracker?.let { holder.bind(imagePath, it.isSelected(imagePath.imageId)) }
         holder.itemView.setOnClickListener { listener?.onItemClicked(holder.layoutPosition) }
     }
 
@@ -60,14 +61,6 @@ class ImagesListAdapter @Inject constructor(
         itemView: View,
         private val urlToUriMapper: Mapper<String, Uri>
     ) : BaseAdapter.ViewHolder<Image>(itemView) {
-
-        fun getItemDetails(): ItemDetailsLookup.ItemDetails<Long> =
-            object : ItemDetailsLookup.ItemDetails<Long>() {
-                override fun getPosition(): Int = adapterPosition
-                override fun getSelectionKey(): Long = getId()
-            }
-
-        fun getId(): Long = adapterPosition.toLong()
 
         fun bind(item: Image, isActivated: Boolean = false) {
             itemView.isActivated = isActivated

@@ -76,7 +76,7 @@ class NotePresenter(private val argId: Long?, private val argDuplicate: Boolean?
     fun onImageAdded(image: Image) {
         note?.images?.let {
             it.add(image)
-            viewState.setImages(ArrayList(it))
+            viewState.setImages(it)
         }
     }
 
@@ -85,7 +85,7 @@ class NotePresenter(private val argId: Long?, private val argDuplicate: Boolean?
             deleteImages.execute(images)
             note?.images?.let {
                 it.removeAll(images)
-                viewState.setImages(ArrayList(it))
+                viewState.setImages(it)
                 viewState.hideDeleteButton()
             }
         }

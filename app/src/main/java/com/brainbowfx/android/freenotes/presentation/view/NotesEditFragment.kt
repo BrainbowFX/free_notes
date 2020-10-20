@@ -29,6 +29,7 @@ import com.brainbowfx.android.freenotes.presentation.adapters.ImagesListAdapter
 import com.brainbowfx.android.freenotes.presentation.presenter.ImagesPresenter
 import com.brainbowfx.android.freenotes.presentation.presenter.SpeechPresenter
 import com.brainbowfx.android.freenotes.presentation.presenter.NotePresenter
+import com.brainbowfx.android.freenotes.presentation.utils.ImagesItemKeyProvider
 import com.brainbowfx.android.freenotes.presentation.utils.NotesImagesItemDetailsLookup
 import com.brainbowfx.android.freenotes.presentation.view.contract.ImagesView
 import com.brainbowfx.android.freenotes.presentation.view.contract.NotesEditView
@@ -62,7 +63,7 @@ class NotesEditFragment : MvpAppCompatFragment(), SpeechView, NotesEditView, Ima
     @Inject
     lateinit var imagesListAdapter: ImagesListAdapter
 
-    private lateinit var tracker: SelectionTracker<Long>
+    private lateinit var tracker: SelectionTracker<String>
 
     private lateinit var tietTitle: TextInputEditText
 
@@ -117,9 +118,9 @@ class NotesEditFragment : MvpAppCompatFragment(), SpeechView, NotesEditView, Ima
         tracker = SelectionTracker.Builder(
             "notesSelection",
             rvImagesList,
-            StableIdKeyProvider(rvImagesList),
-            NotesImagesItemDetailsLookup(rvImagesList),
-            StorageStrategy.createLongStorage()
+            ImagesItemKeyProvider(imagesListAdapter),
+            NotesImagesItemDetailsLookup(rvImagesList, imagesListAdapter),
+            StorageStrategy.createStringStorage()
         ).build()
         tracker.addObserver(object : SelectionTracker.SelectionObserver<Long>() {
             override fun onSelectionChanged() =
