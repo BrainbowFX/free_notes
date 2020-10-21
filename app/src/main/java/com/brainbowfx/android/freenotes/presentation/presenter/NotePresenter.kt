@@ -55,7 +55,9 @@ class NotePresenter(private val argId: Long?, private val argDuplicate: Boolean?
                 }
             }
         }
+    }
 
+    fun onStart() {
         viewState.setupButton()
     }
 
@@ -92,13 +94,10 @@ class NotePresenter(private val argId: Long?, private val argDuplicate: Boolean?
     }
 
     fun onReturnBack() {
-        note?.whenNotNullOrEmpty {
-            launch {
-                saveNote.execute(it)
-                notesRouter.returnBack()
-            }
+        launch {
+            note?.whenNotNullOrEmpty { saveNote.execute(it) }
+            notesRouter.returnBack()
         }
-
     }
 
     fun onImageSelected(url: String) = imageViewer.showImage(url)

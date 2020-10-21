@@ -98,6 +98,11 @@ class NotesEditFragment : MvpAppCompatFragment(), SpeechView, NotesEditView, Ima
         return inflater.inflate(R.layout.fragment_note_edit, container, false)
     }
 
+    override fun onStart() {
+        super.onStart()
+        notePresenter.onStart()
+    }
+
     @SuppressLint("ClickableViewAccessibility")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
