@@ -5,9 +5,7 @@ import com.brainbowfx.android.freenotes.DATETIME_NAMED_ID
 import com.brainbowfx.android.freenotes.domain.abstraction.ImageViewer
 import com.brainbowfx.android.freenotes.domain.entities.Image
 import com.brainbowfx.android.freenotes.domain.entities.Note
-import com.brainbowfx.android.freenotes.domain.interactor.DeleteImages
-import com.brainbowfx.android.freenotes.domain.interactor.SaveNote
-import com.brainbowfx.android.freenotes.domain.interactor.GetNote
+import com.brainbowfx.android.freenotes.domain.interactor.*
 import com.brainbowfx.android.freenotes.domain.router.NotesRouter
 import com.brainbowfx.android.freenotes.presentation.view.contract.NotesEditView
 import com.brainbowfx.android.freenotes.presentation.whenNotNullOrEmpty
@@ -35,6 +33,9 @@ class NotePresenter(private val argId: Long?, private val argDuplicate: Boolean?
     lateinit var notesRouter: NotesRouter
 
     @Inject
+    lateinit var copyNote: CopyNote
+
+    @Inject
     lateinit var deleteImages: DeleteImages
 
     @field:[Inject Named(DATETIME_NAMED_ID)]
@@ -49,10 +50,9 @@ class NotePresenter(private val argId: Long?, private val argDuplicate: Boolean?
             note = Note(dateTime = simpleDateFormat.format(Date()))
         } else {
             launch {
-                note = getNote.execute(argId)?.also(this@NotePresenter::initViewFields)
-                if (argDuplicate == true) {
-                    note?.id = 0
-                }
+                note = getNote.execute(argId)
+                    ?.also(this@NotePresenter::initViewFields)
+                    ?.let { if (argDuplicate == true) copyNote.execute(it) else it}
             }
         }
     }

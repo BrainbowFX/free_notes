@@ -7,4 +7,6 @@ interface ImageFileManager {
     fun addImageFile(): File?
 
     fun deleteImageFile(url: String): Boolean
+
+    fun copyImageFile(url: String): File?
 }

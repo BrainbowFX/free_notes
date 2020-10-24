@@ -1,27 +1,19 @@
 package com.brainbowfx.android.freenotes.data.images
 
-import com.brainbowfx.android.freenotes.TIMESTAMP_NAMED_ID
 import com.brainbowfx.android.freenotes.di.scopes.Presenter
 import com.brainbowfx.android.freenotes.domain.abstraction.ImageFileManager
-import java.io.File
-import java.io.IOException
-import java.text.SimpleDateFormat
-import java.util.*
+import java.io.*
 import javax.inject.Inject
-import javax.inject.Named
 
 @Presenter
 class ImageFileManagerImpl @Inject constructor(
-    private val externalFilesDir: File,
-    @Named(TIMESTAMP_NAMED_ID) private val simpleDateFormat: SimpleDateFormat
-
+    private val externalFilesDir: File
 ) :
     ImageFileManager {
 
     @Throws(IOException::class)
     override fun addImageFile(): File? {
-        val timeStamp = simpleDateFormat.format(Date())
-         return File.createTempFile("JPEG_$timeStamp", ".jpg", externalFilesDir)
+        return File.createTempFile( "note_", ".jpg", externalFilesDir)
     }
 
     @Throws(IOException::class)
@@ -32,6 +24,21 @@ class ImageFileManagerImpl @Inject constructor(
             file.delete()
         } else {
             false
+        }
+    }
+
+    override fun copyImageFile(url: String): File? {
+        val source = File(externalFilesDir, url.substringAfterLast("/"))
+        val copy = addImageFile()
+
+        return if (source.exists() && copy != null) {
+            try {
+                source.copyTo(copy, true)
+            } catch (exception: IOException) {
+                null
+            }
+        } else {
+            null
         }
     }
 }

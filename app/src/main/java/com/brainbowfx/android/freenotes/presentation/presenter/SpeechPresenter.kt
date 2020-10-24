@@ -43,7 +43,7 @@ class SpeechPresenter : MvpPresenter<SpeechView>(), SpeechRecognitionService.Spe
 
     //SpeechRecognitionSubscriber implementation
     override fun onSpeechError(throwable: Throwable) {
-        viewState.showError(throwable.message.toString())
+        viewState.showSpeechRecognitionError()
     }
 
     override fun onSpeechResult(recognizedSpeech: String) {

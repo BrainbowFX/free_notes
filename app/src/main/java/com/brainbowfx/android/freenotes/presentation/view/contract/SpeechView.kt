@@ -7,7 +7,7 @@ import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
 interface SpeechView : MvpView {
 
     @StateStrategyType(OneExecutionStateStrategy::class)
-    fun showError(error: String)
+    fun showSpeechRecognitionError()
 
     @StateStrategyType(OneExecutionStateStrategy::class)
     fun showSpeechMessage()

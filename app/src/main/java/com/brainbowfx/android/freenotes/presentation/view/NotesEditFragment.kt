@@ -225,9 +225,8 @@ class NotesEditFragment : MvpAppCompatFragment(), SpeechView, NotesEditView, Ima
         ibDeleteImage.visibility = View.INVISIBLE
     }
 
-    //SpeechView implementation
-    override fun showError(error: String) {
-        Toast.makeText(context, error, Toast.LENGTH_LONG).show()
+    override fun showSpeechRecognitionError() {
+        Toast.makeText(requireContext(), R.string.speech_recognition_error, Toast.LENGTH_SHORT).show()
     }
 
     override fun placeTextAtCursorPosition(text: String) {

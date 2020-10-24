@@ -48,6 +48,10 @@ class SpeechRecognitionService @Inject constructor(
         speechRecognizer.startListening(recognitionIntent)
     }
 
+    fun cancel() {
+        speechRecognizer.cancel()
+    }
+
     fun stop() {
         speechRecognizer.stopListening()
     }
