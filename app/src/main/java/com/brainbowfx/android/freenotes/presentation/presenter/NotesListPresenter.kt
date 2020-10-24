@@ -6,6 +6,7 @@ import com.brainbowfx.android.freenotes.domain.entities.Note
 import com.brainbowfx.android.freenotes.domain.interactor.DeleteNote
 import com.brainbowfx.android.freenotes.domain.interactor.GetNotesList
 import com.brainbowfx.android.freenotes.domain.router.NotesRouter
+import com.brainbowfx.android.freenotes.domain.router.Router
 import com.brainbowfx.android.freenotes.presentation.view.contract.NotesListView
 import kotlinx.coroutines.*
 import javax.inject.Inject
@@ -21,6 +22,9 @@ class NotesListPresenter : ScopedPresenter<NotesListView>() {
 
     @Inject
     lateinit var notesRouter: NotesRouter
+
+    @Inject
+    lateinit var searchRouter: Router
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
@@ -58,6 +62,8 @@ class NotesListPresenter : ScopedPresenter<NotesListView>() {
         notesRouter.navigateNext()
     }
 
-
+    fun onSearchButton() {
+        searchRouter.navigateNext()
+    }
 
 }

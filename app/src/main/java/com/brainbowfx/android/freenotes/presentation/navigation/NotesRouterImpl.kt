@@ -9,9 +9,7 @@ import javax.inject.Inject
 
 @Activity
 class NotesRouterImpl @Inject constructor(private val navigationController: NavController?) :
-    NotesRouter {
-
-    private var onDestinationChangedListener: NavController.OnDestinationChangedListener? = null
+    BaseRouter(navigationController), NotesRouter {
 
     override fun navigateNext(id: Long, duplicate: Boolean) {
         navigationController?.navigate(
@@ -30,26 +28,5 @@ class NotesRouterImpl @Inject constructor(private val navigationController: NavC
             bundleOf("id" to id)
         )
     }
-
-    override fun addCallback(onDestinationChanged: (destinationId: Int) -> Unit) {
-        onDestinationChangedListener =
-            NavController.OnDestinationChangedListener { _, destination, _ ->
-                onDestinationChanged(destination.id)
-            }.also {
-                navigationController?.addOnDestinationChangedListener(it)
-            }
-    }
-
-    override fun removeCallback() {
-        onDestinationChangedListener?.let {
-            navigationController?.removeOnDestinationChangedListener(
-                it
-            )
-        }
-
-    }
-
-    override fun returnBack(): Boolean = navigationController?.popBackStack() ?: false
-
 
 }

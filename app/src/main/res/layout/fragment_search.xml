@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingTop="@dimen/cards_primary_title_top_padding"
+        android:padding="@dimen/minimal_margin"
+        tools:context=".presentation.view.SearchFragment">
+
+    <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/searchInputLayout"
+            style="@style/titleInputStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginEnd="@dimen/edge_margin_large"
+            android:layout_marginStart="@dimen/edge_margin_large">
+
+        <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/tietSearch"
+                android:singleLine="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/note_title_hint"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvResultNoteList"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:orientation="vertical"
+            android:layout_marginTop="@dimen/minimal_margin"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/searchInputLayout"
+            app:layout_constraintStart_toStartOf="@+id/searchInputLayout"
+            app:layout_constraintTop_toBottomOf="@+id/searchInputLayout" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
