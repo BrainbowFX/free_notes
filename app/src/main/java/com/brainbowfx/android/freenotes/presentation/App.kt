@@ -4,7 +4,6 @@ import android.app.Activity
 import android.app.Application
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.os.SharedMemory
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import com.brainbowfx.android.freenotes.PREF_DARK_THEME
@@ -36,7 +35,7 @@ class App : Application() {
         private var isSaveInstanceStateCalled: Boolean = false
 
         override fun onActivityCreated(activity: Activity, bundle: Bundle?) {
-            plusActivityPerInstanceSubComponent()
+            plusPresenterSubComponent()
             plusActivitySubComponent(activity as AppCompatActivity)
         }
 
@@ -77,11 +76,12 @@ class App : Application() {
         AppCompatDelegate.setDefaultNightMode(theme)
     }
 
-    private fun plusActivityPerInstanceSubComponent(): PresenterSubComponent =
+    private fun plusPresenterSubComponent(): PresenterSubComponent =
         presenterSubComponent ?: appComponent.presenterSubComponent()
             .mappersModule(MappersModule())
             .speechRecognitionModule(SpeechRecognitionModule())
             .dateModule(DateModule())
+            .searchModule(SearchModule())
             .build()
             .also { presenterSubComponent = it }
 

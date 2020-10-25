@@ -11,7 +11,8 @@ import dagger.Subcomponent
         DateModule::class,
         SpeechRecognitionModule::class,
         PresenterBindersModule::class,
-        MappersModule::class
+        MappersModule::class,
+        SearchModule::class
     ]
 )
 @Presenter
@@ -24,6 +25,7 @@ interface PresenterSubComponent {
         fun dateModule(dateModule: DateModule): Builder
         fun speechRecognitionModule(speechRecognitionModule: SpeechRecognitionModule): Builder
         fun mappersModule(mappersModule: MappersModule): Builder
+        fun searchModule(searchModule: SearchModule): Builder
         fun build(): PresenterSubComponent
     }
 }
