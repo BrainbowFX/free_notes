@@ -74,7 +74,11 @@ class SearchFragment : MvpAppCompatFragment(), SearchView {
 
     private fun initResultsList(view: View) {
         rvSearchResultList = view.findViewById(R.id.rvResultNoteList)
-        rvSearchResultList.adapter = searchAdapter
+        rvSearchResultList.adapter = searchAdapter.apply {
+            setListener {
+                searchPresenter.onNoteSelected(getItemId(it))
+            }
+        }
         rvSearchResultList.addItemDecoration(itemDecoration)
     }
 

@@ -11,22 +11,24 @@ import javax.inject.Inject
 class NotesRouterImpl @Inject constructor(private val navigationController: NavController?) :
     BaseRouter(navigationController), NotesRouter {
 
+    private fun getAction(): Int? = when (navigationController?.currentDestination?.id) {
+        R.id.searchFragment -> R.id.action_searchFragment_to_notesEditFragment
+        R.id.notesListFragment -> R.id.action_notesListFragment_to_notesEditFragment
+        else -> null
+    }
+
     override fun navigateNext(id: Long, duplicate: Boolean) {
+        val bundle = bundleOf("id" to id, "duplicate" to duplicate)
+        val action = getAction() ?: return
         navigationController?.navigate(
-            R.id.action_notesListFragment_to_notesEditFragment,
-            bundleOf("id" to id, "duplicate" to duplicate)
+            action,
+            bundle
         )
     }
 
     override fun navigateNext() {
-        navigationController?.navigate(R.id.action_notesListFragment_to_notesEditFragment)
-    }
-
-    override fun navigateNext(id: Long) {
-        navigationController?.navigate(
-            R.id.action_notesListFragment_to_notesEditFragment,
-            bundleOf("id" to id)
-        )
+        val action = getAction() ?: return
+        navigationController?.navigate(action)
     }
 
 }
