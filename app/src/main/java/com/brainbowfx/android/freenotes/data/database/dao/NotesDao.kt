@@ -25,5 +25,8 @@ interface NotesDao : BaseDao<NoteEntity> {
     @Query("SELECT * FROM notes")
     suspend fun getAll(): List<NoteEntity>
 
+    @Query("SELECT * FROM notes where (title LIKE '%' || :query || '%' OR text LIKE '%' || :query || '%') AND NULLIF(:query, '') IS NOT NULL ")
+    suspend fun find(query: String): List<NoteEntity>
+
 
 }

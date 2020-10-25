@@ -74,7 +74,7 @@ class NotesListFragment : BaseListFragment() {
             R.drawable.ic_add,
             BottomAppBar.FAB_ALIGNMENT_MODE_CENTER
         ) {
-            presenter.onSearchButton()
+            presenter.onFloatingButtonClick()
         }
     }
 }

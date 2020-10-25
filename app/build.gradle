@@ -14,8 +14,8 @@ android {
         applicationId "com.brainbowfx.android.freenotes"
         minSdkVersion 21
         targetSdkVersion 30
-        versionCode 10020
-        versionName "1.0.20"
+        versionCode 10100
+        versionName "1.1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }

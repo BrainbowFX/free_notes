@@ -41,11 +41,16 @@ class MappersModule {
 
     @Provides
     @Presenter
+    fun provideNoteEntityToNoteMapper(@Named(DATETIME_NAMED_ID) simpleDateFormat: SimpleDateFormat): Mapper<NoteEntity, Note> =
+        NoteEntityToNoteMapper(simpleDateFormat)
+
+    @Provides
+    @Presenter
     fun provideNotesEntityToNotesMapper(
-        @Named(DATETIME_NAMED_ID) simpleDateFormat: SimpleDateFormat,
-        mapper: Mapper<ImageEntity, Image>
+        imagesMapper: Mapper<ImageEntity, Image>,
+        notesMapper: Mapper<NoteEntity, Note>
     ): Mapper<NoteWithImages, Note> =
-        NotesWithImagesToNotesMapper(simpleDateFormat, mapper)
+        NotesWithImagesToNotesMapper(imagesMapper, notesMapper)
 
     @Provides
     @Presenter

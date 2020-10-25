@@ -20,11 +20,12 @@
             android:layout_marginStart="@dimen/edge_margin_large">
 
         <com.google.android.material.textfield.TextInputEditText
+                android:gravity="center|start"
                 android:id="@+id/tietSearch"
                 android:singleLine="true"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/note_title_hint"/>
+                android:hint="@string/search"/>
 
     </com.google.android.material.textfield.TextInputLayout>
 

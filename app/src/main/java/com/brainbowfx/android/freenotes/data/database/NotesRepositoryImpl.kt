@@ -39,6 +39,7 @@ class NotesRepositoryImpl @Inject constructor(
     override suspend fun getAll(recycled: Boolean): List<NoteWithImages> =
         notesDao.getNoteWithImages(recycled)
 
+    override suspend fun find(query: String): List<NoteEntity> = notesDao.find(query)
 
     override suspend fun add(item: NoteWithImages): Long = applicationDatabase.withTransaction {
         val noteId = notesDao.insert(item.noteEntity)

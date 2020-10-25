@@ -16,6 +16,7 @@ import com.brainbowfx.android.freenotes.R
 import com.brainbowfx.android.freenotes.domain.abstraction.ImageViewer
 import com.brainbowfx.android.freenotes.domain.mappers.Mapper
 import com.brainbowfx.android.freenotes.domain.router.NotesRouter
+import com.brainbowfx.android.freenotes.domain.router.Router
 import com.brainbowfx.android.freenotes.presentation.App
 import com.brainbowfx.android.freenotes.presentation.abstraction.FloatingActionButtonOwner
 import com.brainbowfx.android.freenotes.presentation.abstraction.PermissionManager
@@ -41,6 +42,9 @@ class MainActivity : MvpAppCompatActivity(), PermissionManager, ImageViewer, Flo
     @Inject
     lateinit var preferences: SharedPreferences
 
+    @Inject
+    lateinit var searchRouter: Router
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -53,24 +57,33 @@ class MainActivity : MvpAppCompatActivity(), PermissionManager, ImageViewer, Flo
 
     private fun setupBottomNavBar() {
         bottomAppBar = findViewById(R.id.bottomAppBar)
-        bottomAppBar.menu
-            .add("")
-            .setIcon(
-                if (preferences.getInt(
-                        PREF_DARK_THEME,
-                        AppCompatDelegate.MODE_NIGHT_NO
-                    ) == AppCompatDelegate.MODE_NIGHT_NO
-                ) {
-                    R.drawable.ic_day
-                } else {
-                    R.drawable.ic_night
+        with(bottomAppBar.menu) {
+            add(getString(R.string.search))
+                .setIcon(R.drawable.ic_search)
+                .setOnMenuItemClickListener {
+                    searchRouter.navigateNext()
+                    true
                 }
-            )
-            .setOnMenuItemClickListener {
-                switchTheme()
-                true
-            }
-            .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
+
+            add("")
+                .setIcon(
+                    if (preferences.getInt(
+                            PREF_DARK_THEME,
+                            AppCompatDelegate.MODE_NIGHT_NO
+                        ) == AppCompatDelegate.MODE_NIGHT_NO
+                    ) {
+                        R.drawable.ic_day
+                    } else {
+                        R.drawable.ic_night
+                    }
+                )
+                .setOnMenuItemClickListener {
+                    switchTheme()
+                    true
+                }
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
+        }
     }
 
     private fun switchTheme() {

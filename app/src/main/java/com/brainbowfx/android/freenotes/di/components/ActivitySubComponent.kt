@@ -3,13 +3,11 @@ package com.brainbowfx.android.freenotes.di.components
 import com.brainbowfx.android.freenotes.di.modules.*
 import com.brainbowfx.android.freenotes.di.modules.binders.ActivityBindersModule
 import com.brainbowfx.android.freenotes.di.scopes.Activity
-import com.brainbowfx.android.freenotes.presentation.presenter.ImagesPresenter
-import com.brainbowfx.android.freenotes.presentation.presenter.NotePresenter
-import com.brainbowfx.android.freenotes.presentation.presenter.NotesListPresenter
-import com.brainbowfx.android.freenotes.presentation.presenter.SpeechPresenter
+import com.brainbowfx.android.freenotes.presentation.presenter.*
 import com.brainbowfx.android.freenotes.presentation.view.MainActivity
 import com.brainbowfx.android.freenotes.presentation.view.NotesEditFragment
 import com.brainbowfx.android.freenotes.presentation.view.NotesListFragment
+import com.brainbowfx.android.freenotes.presentation.view.SearchFragment
 import dagger.Subcomponent
 
 @Subcomponent(modules = [ActivityModule::class, ActivityBindersModule::class])
@@ -29,4 +27,6 @@ interface ActivitySubComponent {
     fun inject(notePresenter: NotePresenter)
     fun inject(imagesPresenter: ImagesPresenter)
     fun inject(notesListFragment: NotesListFragment)
+    fun inject(searchFragment: SearchFragment)
+    fun inject(searchPresenter: SearchPresenter)
 }

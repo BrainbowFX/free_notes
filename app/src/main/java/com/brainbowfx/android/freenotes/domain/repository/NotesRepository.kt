@@ -16,4 +16,6 @@ interface NotesRepository {
     suspend fun get(id: Long): NoteWithImages?
 
     suspend fun getAll(recycled: Boolean): List<NoteWithImages>
+
+    suspend fun find(query: String): List<NoteEntity>
 }

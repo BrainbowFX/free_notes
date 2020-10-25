@@ -13,4 +13,5 @@
     <string name="speech_recognition_error">Не удалось распознать, пожалуйста повторите фразу удерживая кнопку микрофона</string>
     <string name="write_external_storage_permission_denied">Невозможно создать временный файл для съемки фото без разрешения на запись файлов</string>
     <string name="no_camera_message">Отсутствует камера</string>
+    <string name="search">Поиск</string>
 </resources>
