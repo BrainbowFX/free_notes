@@ -136,6 +136,22 @@ class NotesRepositoryImplTest {
         }
     }
 
+    @Test
+    fun testSearch() {
+        runBlocking {
+            val query = "foo"
+            val notes = createTestNotes(4)
+            notesDao.insert(notes)
+            val target = NoteEntity(title = query, text = "bar", date = Date().time)
+            notesDao.insert(target)
+
+            val result = notesRepository.find(query)
+
+            assert(result.size == 1)
+            assert(result.first().title == query)
+        }
+    }
+
     @After
     fun clear() {
         db.clearAllTables()
