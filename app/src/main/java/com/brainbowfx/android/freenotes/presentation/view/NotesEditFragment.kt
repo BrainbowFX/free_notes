@@ -191,7 +191,10 @@ class NotesEditFragment : MvpAppCompatFragment(), SpeechView, NotesEditView, Ima
 
     override fun onDestroy() {
         super.onDestroy()
-        imagesListAdapter.removeListener()
+        if (this::imagesListAdapter.isInitialized) {
+            imagesListAdapter.removeListener()
+        }
+
     }
 
     //NotesEditView implementation

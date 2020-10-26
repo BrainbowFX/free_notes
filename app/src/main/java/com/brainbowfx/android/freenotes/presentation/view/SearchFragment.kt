@@ -40,14 +40,6 @@ class SearchFragment : MvpAppCompatFragment(), SearchView {
     @Inject
     lateinit var itemDecoration: RecyclerView.ItemDecoration
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        App.Instance.activitySubComponent?.let {
-            it.inject(this)
-            it.inject(searchPresenter)
-        }
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -55,6 +47,11 @@ class SearchFragment : MvpAppCompatFragment(), SearchView {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        App.Instance.activitySubComponent?.let {
+            it.inject(this)
+            it.inject(searchPresenter)
+        }
+
         initSearchInput(view)
         initResultsList(view)
     }
